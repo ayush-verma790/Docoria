@@ -10,7 +10,7 @@ import {
   Layers, Image as ImageIcon, Scissors, Hash, Unlock, Tag, 
   Hammer, FileImage, QrCode, Scan, Signature, RefreshCw,
   Cpu, Rocket, Eye, Globe, MessageSquare, ChevronDown,
-  BarChart, Users, Laptop, Clock
+  BarChart, Users, Laptop, Clock, Layout, Maximize
 } from "lucide-react"
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion"
 import { SiteHeader } from "@/components/site-header"
@@ -81,7 +81,12 @@ export default function LandingPage() {
                   Start Now <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="h-16 w-full sm:w-[220px] rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 text-white font-bold text-lg backdrop-blur-sm">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="h-16 w-full sm:w-[220px] rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 text-white font-bold text-lg backdrop-blur-sm"
+                onClick={() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 View All Tools
               </Button>
             </div>
@@ -206,39 +211,49 @@ export default function LandingPage() {
               <p className="text-slate-500 text-xl max-w-2xl mx-auto font-medium">A collection of easy-to-use tools for your daily document work.</p>
            </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div id="tools" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
                  {[
                      { name: "Convert Files", icon: Shuffle, link: "/convert", desc: "Change your files between PDF, Word, and Images while keeping them perfect.", color: "text-blue-400" },
-                     { name: "Images to PDF", icon: ImageIcon, link: "/image-to-pdf", desc: "Turn your photos and pictures into one clean PDF file.", color: "text-emerald-400" },
-                     { name: "Sign PDF", icon: Signature, link: "/sign", desc: "The easy way to sign. Draw your signature or upload one and put it on any page.", color: "text-amber-400" },
+                     { name: "Organize Pages", icon: Layout, link: "/organize", desc: "Reorder, delete, or rotate pages in your PDF with ease.", color: "text-indigo-400" },
+                     { name: "PDF to JPG", icon: FileImage, link: "/pdf-to-jpg", desc: "Extract every page into high-quality JPG image files.", color: "text-rose-400" },
+                     { name: "Text Scanner", icon: Scan, link: "/scanner", desc: "AI OCR to extract text from images and scanned documents.", color: "text-pink-400" },
+                     { name: "Sign PDF", icon: Signature, link: "/sign", desc: "Draw your signature and place it anywhere on any page.", color: "text-amber-400" },
+                     { name: "Protect PDF", icon: Lock, link: "/protect", desc: "Secure your documents with military-grade password encryption.", color: "text-emerald-400" },
                      { name: "Combine PDFs", icon: Layers, link: "/merge", desc: "Merge many PDF files into one document with easy drag-and-drop.", color: "text-violet-400" },
-                     { name: "Take Pages Out", icon: Scissors, link: "/split", desc: "Cut your large PDF into smaller parts or take out only the pages you need.", color: "text-cyan-400" },
+                     { name: "Split PDF", icon: Scissors, link: "/split", desc: "Cut your large PDF into smaller parts or take out specific pages.", color: "text-cyan-400" },
                      { name: "Make Smaller", icon: Zap, link: "/compress", desc: "Shrink your files for email without losing any visible quality.", color: "text-indigo-400" },
-                     { name: "Add Watermark", icon: Shield, link: "/watermark", desc: "Protect your work with custom text or image stamps on every page.", color: "text-red-400" },
-                     { name: "QR Generator", icon: QrCode, link: "/qrcode", desc: "Make clean QR codes for text, links, or business cards quickly.", color: "text-green-400" },
+                     { name: "Resize PDF", icon: Maximize, link: "/resize", desc: "Change page dimensions to A4, Letter, or custom sizes.", color: "text-purple-400" },
+                     { name: "Add Watermark", icon: Shield, link: "/watermark", desc: "Protect your work with custom text or image stamps.", color: "text-red-400" },
+                     { name: "QR Generator", icon: QrCode, link: "/qrcode", desc: "Make clean QR codes for text, links, or business cards.", color: "text-green-400" },
+                     { name: "Edit PDF", icon: PenTool, link: "/edit", desc: "Add text, shapes, and annotations directly to your PDF.", color: "text-blue-500" },
                      { name: "Fix Passwords", icon: Unlock, link: "/unlock", desc: "Remove passwords and limits from your PDF files safely.", color: "text-orange-400" },
+                     { name: "Add Numbers", icon: Hash, link: "/page-numbers", desc: "Automatically add page numbers to your entire document.", color: "text-blue-300" },
+                     { name: "Metadata Editor", icon: Tag, link: "/metadata", desc: "Modify hidden properties like Author and Title.", color: "text-teal-400" },
+                     { name: "Flatten PDF", icon: Hammer, link: "/flatten", desc: "Make forms non-editable and merge annotations permanently.", color: "text-rose-500" },
+                     { name: "Images to PDF", icon: ImageIcon, link: "/image-to-pdf", desc: "Turn your photos and screenshots into a clean PDF file.", color: "text-emerald-500" },
                  ].map((tool, i) => (
                     <motion.div
                         key={tool.name}
-                        whileHover={{ y: -10, scale: 1.02 }}
+                        whileHover={{ y: -5, scale: 1.01 }}
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.05 }}
+                        transition={{ delay: i * 0.02 }}
+                        className="h-full"
                     >
                         <Link 
                             href={tool.link}
-                            className="p-12 bg-slate-900 border border-white/5 rounded-[3.5rem] hover:border-indigo-500/20 transition-all block h-full group relative overflow-hidden shadow-2xl"
+                            className="p-8 sm:p-12 bg-slate-900 border border-white/5 rounded-[2.5rem] sm:rounded-[3.5rem] hover:border-indigo-500/20 transition-all block h-full group relative overflow-hidden shadow-2xl"
                         >
-                            <div className="flex items-center justify-between mb-8">
-                                <div className={cn("p-5 rounded-[1.5rem] bg-slate-950 border border-white/5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500", tool.color)}>
-                                    <tool.icon size={32} />
+                            <div className="flex items-center justify-between mb-6 sm:mb-8">
+                                <div className={cn("p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] bg-slate-950 border border-white/5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500", tool.color)}>
+                                    <tool.icon size={28} className="sm:w-8 sm:h-8" />
                                 </div>
-                                <div className="p-3 rounded-full bg-white/5 text-slate-700 group-hover:bg-indigo-500 group-hover:text-white transition-all">
-                                    <ArrowRight size={20} />
+                                <div className="p-2 sm:p-3 rounded-full bg-white/5 text-slate-700 group-hover:bg-indigo-500 group-hover:text-white transition-all">
+                                    <ArrowRight size={18} className="sm:w-5 sm:h-5" />
                                 </div>
                             </div>
-                            <h3 className="text-3xl font-black mb-4 group-hover:text-white transition-colors">{tool.name}</h3>
-                            <p className="text-base text-slate-500 leading-relaxed font-medium">{tool.desc}</p>
+                            <h3 className="text-2xl sm:text-3xl font-black mb-3 sm:mb-4 group-hover:text-white transition-colors">{tool.name}</h3>
+                            <p className="text-sm sm:text-base text-slate-500 leading-relaxed font-medium">{tool.desc}</p>
                             
                             <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-indigo-500/0 group-hover:via-indigo-500/40 to-transparent transition-all duration-1000"></div>
                         </Link>
