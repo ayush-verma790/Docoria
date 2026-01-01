@@ -1,17 +1,11 @@
-"use client"
+import { Metadata } from 'next'
+import ImageToPdfLoader from './image-to-pdf-loader'
 
-import dynamic from "next/dynamic"
-import { Loader2 } from "lucide-react"
-
-const ImageToPdfClient = dynamic(() => import("./image-to-pdf-client"), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center">
-      <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
-    </div>
-  )
-})
+export const metadata: Metadata = {
+  title: "Convert Image to PDF | JPG & PNG to PDF Converter",
+  description: "Combine your photos, screenshots, and graphics into professional PDF documents. Supports JPG, PNG, and multiple image uploads.",
+}
 
 export default function ImageToPdfPage() {
-  return <ImageToPdfClient />
+  return <ImageToPdfLoader />
 }

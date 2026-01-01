@@ -1,17 +1,11 @@
-"use client"
+import { Metadata } from 'next'
+import ScannerLoader from './scanner-loader'
 
-import dynamic from "next/dynamic"
-import { Loader2 } from "lucide-react"
-
-const ScannerClient = dynamic(() => import("./scanner-client"), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-      <Loader2 className="w-10 h-10 text-pink-500 animate-spin" />
-    </div>
-  )
-})
+export const metadata: Metadata = {
+  title: "AI Text Scanner | Online OCR for Images & Documents",
+  description: "Extract text from photos and scans using high-accuracy AI OCR. Copy or download extracted text in seconds.",
+}
 
 export default function ScannerPage() {
-  return <ScannerClient />
+  return <ScannerLoader />
 }

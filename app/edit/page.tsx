@@ -1,17 +1,11 @@
-"use client"
+import { Metadata } from 'next'
+import EditLoader from './edit-loader'
 
-import dynamic from "next/dynamic"
-import { Loader2 } from "lucide-react"
-
-const EditClient = dynamic(() => import("./edit-client"), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-      <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-    </div>
-  )
-})
+export const metadata: Metadata = {
+  title: "Edit PDF Online | Free PDF Editor & Annotator",
+  description: "Add text, signatures, and annotations to your PDF documents directly in your browser. No software installation required.",
+}
 
 export default function EditPage() {
-  return <EditClient />
+  return <EditLoader />
 }

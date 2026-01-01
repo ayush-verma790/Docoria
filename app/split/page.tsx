@@ -1,17 +1,11 @@
-"use client"
+import { Metadata } from 'next'
+import SplitLoader from './split-loader'
 
-import dynamic from "next/dynamic"
-import { Loader2 } from "lucide-react"
-
-const SplitClient = dynamic(() => import("./split-client"), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-      <Loader2 className="w-10 h-10 text-cyan-500 animate-spin" />
-    </div>
-  )
-})
+export const metadata: Metadata = {
+  title: "Split PDF Online | Separate PDF Pages for Free",
+  description: "Extract specific pages from your PDF or split documents into independent files. Fast, secure, and easy to use.",
+}
 
 export default function SplitPage() {
-  return <SplitClient />
+  return <SplitLoader />
 }
