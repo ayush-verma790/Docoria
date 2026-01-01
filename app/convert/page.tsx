@@ -1,7 +1,11 @@
-"use client"
-
 import dynamic from "next/dynamic"
 import { Loader2 } from "lucide-react"
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Convert PDF to Word, Excel & PPT | Free Online Converter",
+  description: "Transform your PDF documents into editable Word, Excel, and PowerPoint files instantly. High-quality conversion with formatting preserved.",
+}
 
 const ConvertClient = dynamic(() => import("./convert-client"), {
   ssr: false,

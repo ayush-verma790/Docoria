@@ -1,7 +1,11 @@
-"use client"
-
 import dynamic from "next/dynamic"
 import { Loader2 } from "lucide-react"
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Merge PDF Files Online | Combine Multiple PDFs for Free",
+  description: "Combine multiple PDF documents into a single file in seconds. Easy drag-and-drop interface, secure and private browser processing.",
+}
 
 const MergeClient = dynamic(() => import("./merge-client"), {
   ssr: false,

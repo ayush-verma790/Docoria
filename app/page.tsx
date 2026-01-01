@@ -36,6 +36,33 @@ export default function LandingPage() {
       className="min-h-screen bg-[#020617] text-slate-200 overflow-x-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200"
       onMouseMove={handleMouseMove}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Docorio",
+            "url": "https://docorio.com",
+            "description": "Transform any file into a high-quality PDF or convert PDFs to Word, Excel, PowerPoint, images, and other formats. Experience lightning-fast merging, splitting, and compression.",
+            "applicationCategory": "EducationalApplication, BusinessApplication",
+            "operatingSystem": "Any",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": [
+              "PDF Conversion",
+              "PDF Merging",
+              "PDF Splitting",
+              "Electronic Signatures",
+              "OCR Text Scanning",
+              "PDF Compression"
+            ]
+          })
+        }}
+      />
       <SiteHeader />
 
       {/* Dynamic Background Atmosphere */}
@@ -69,10 +96,9 @@ export default function LandingPage() {
               <span className="text-indigo-500">Manage Your PDFs</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Docorio helps you edit, sign, and convert documents in seconds. 
-              No complicated settings. No sign up required. 
-              <span className="text-white"> Everything stays safe on your device.</span>
+            <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+              Transform any file into a high-quality PDF or convert PDFs to Word, Excel, PowerPoint, images, and other formats. 
+              Experience lightning-fast conversion, merging, splitting, and more—all processed <span className="text-white">securely in your browser.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-4">
@@ -220,7 +246,7 @@ export default function LandingPage() {
                      { name: "Sign PDF", icon: Signature, link: "/sign", desc: "Draw your signature and place it anywhere on any page.", color: "text-amber-400" },
                      { name: "Protect PDF", icon: Lock, link: "/protect", desc: "Secure your documents with military-grade password encryption.", color: "text-emerald-400" },
                      { name: "Combine PDFs", icon: Layers, link: "/merge", desc: "Merge many PDF files into one document with easy drag-and-drop.", color: "text-violet-400" },
-                     { name: "Split PDF", icon: Scissors, link: "/split", desc: "Cut your large PDF into smaller parts or take out specific pages.", color: "text-cyan-400" },
+                     { name: "Split PDF", icon: Scissors, link: "/split", desc: "Separate one page or a whole set into independent PDF files easily.", color: "text-cyan-400" },
                      { name: "Make Smaller", icon: Zap, link: "/compress", desc: "Shrink your files for email without losing any visible quality.", color: "text-indigo-400" },
                      { name: "Resize PDF", icon: Maximize, link: "/resize", desc: "Change page dimensions to A4, Letter, or custom sizes.", color: "text-purple-400" },
                      { name: "Add Watermark", icon: Shield, link: "/watermark", desc: "Protect your work with custom text or image stamps.", color: "text-red-400" },
@@ -228,7 +254,7 @@ export default function LandingPage() {
                      { name: "Edit PDF", icon: PenTool, link: "/edit", desc: "Add text, shapes, and annotations directly to your PDF.", color: "text-blue-500" },
                      { name: "Fix Passwords", icon: Unlock, link: "/unlock", desc: "Remove passwords and limits from your PDF files safely.", color: "text-orange-400" },
                      { name: "Add Numbers", icon: Hash, link: "/page-numbers", desc: "Automatically add page numbers to your entire document.", color: "text-blue-300" },
-                     { name: "Metadata Editor", icon: Tag, link: "/metadata", desc: "Modify hidden properties like Author and Title.", color: "text-teal-400" },
+                     { name: "Metadata Editor", icon: Tag, link: "/metadata", desc: "Modify hidden properties and file descriptors for better data management.", color: "text-teal-400" },
                      { name: "Flatten PDF", icon: Hammer, link: "/flatten", desc: "Make forms non-editable and merge annotations permanently.", color: "text-rose-500" },
                      { name: "Images to PDF", icon: ImageIcon, link: "/image-to-pdf", desc: "Turn your photos and screenshots into a clean PDF file.", color: "text-emerald-500" },
                  ].map((tool, i) => (

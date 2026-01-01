@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     default: "Docorio — #1 Free All-in-One Document Suite",
     template: "%s | Docorio"
   },
-  description: "Docorio is the most powerful, AI-driven document engine. Merge, Split, Compress, Convert, and Sign PDFs for free. AI OCR, secure client-side encryption, and pro-grade speed.",
+  description: "Transform any file into a high-quality PDF or convert PDFs to Word, Excel, PowerPoint, images, and other formats. Docorio offers lightning-fast merging, splitting, compression, and professional PDF tools—all processed privately in your browser.",
   keywords: [
     "AI PDF tools", "PDF editor online", "Merge PDF free", "Split PDF", "Compress PDF size", 
     "PDF to Word converter", "Word to PDF", "OCR PDF searchable", "Sign PDF e-signature", 
@@ -66,6 +66,9 @@ export const metadata: Metadata = {
       },
     ],
     apple: "/apple-icon.png",
+  },
+  verification: {
+    google: "nV_VxMMDUuY4FLrke-HpbRTgYR8YzId48PQ9IhJN18g",
   },
 }
 
