@@ -52,7 +52,7 @@ export default function UnlockPage() {
                      <Unlock className="w-8 h-8 text-orange-500" />
                  </div>
                  <h1 className="text-4xl font-bold mb-2">Unlock PDF</h1>
-                 <p className="text-slate-400">Remove passwords and restrictions permanently.</p>
+                 <p className="text-slate-300">Remove passwords and restrictions permanently.</p>
             </div>
 
             <Card className="p-8 bg-slate-900/50 border-white/10 backdrop-blur-xl shadow-2xl">
@@ -67,8 +67,8 @@ export default function UnlockPage() {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="bg-slate-950 border-white/10 pr-10"
-                                    placeholder="Required to open the file"
+                                     className="bg-slate-950 border-white/10 pr-10 text-white placeholder:text-slate-500"
+                                     placeholder="Required to open the file"
                                 />
                                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-slate-400">
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -92,7 +92,7 @@ export default function UnlockPage() {
                           <a href={result.downloadUrl} download={result.filename}>
                               <Button className="w-full h-12 bg-emerald-600 hover:bg-emerald-700">Download Unlocked PDF</Button>
                           </a>
-                          <Button variant="ghost" onClick={() => {setResult(null); setPassword(""); setFile(null)}}>Unlock Another</Button>
+                           <Button variant="ghost" className="text-slate-300 hover:text-white" onClick={() => {setResult(null); setPassword(""); setFile(null)}}>Unlock Another</Button>
                      </div>
                  )}
             </Card>

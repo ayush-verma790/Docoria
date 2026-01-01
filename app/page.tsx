@@ -10,7 +10,8 @@ import {
   Layers, Image as ImageIcon, Scissors, Hash, Unlock, Tag, 
   Hammer, FileImage, QrCode, Scan, Signature, RefreshCw,
   Cpu, Rocket, Eye, Globe, MessageSquare, ChevronDown,
-  BarChart, Users, Laptop, Clock, Layout, Maximize
+  BarChart, Users, Laptop, Clock, Layout, Maximize,
+  Wrench, Eraser, Table, Presentation
 } from "lucide-react"
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion"
 import { SiteHeader } from "@/components/site-header"
@@ -96,7 +97,7 @@ export default function LandingPage() {
               <span className="text-indigo-500">Manage Your PDFs</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
               Transform any file into a high-quality PDF or convert PDFs to Word, Excel, PowerPoint, images, and other formats. 
               Experience lightning-fast conversion, merging, splitting, and more—all processed <span className="text-white">securely in your browser.</span>
             </p>
@@ -133,7 +134,7 @@ export default function LandingPage() {
                             <stat.icon size={24} className="text-indigo-400 opacity-50" />
                         </div>
                         <h4 className="text-3xl md:text-4xl font-black text-white">{stat.value}</h4>
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{stat.label}</p>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{stat.label}</p>
                     </div>
                 ))}
             </div>
@@ -143,7 +144,7 @@ export default function LandingPage() {
         <section className="px-6 py-32 max-w-7xl mx-auto">
             <div className="text-center space-y-6 mb-24">
                 <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter">WHY PEOPLE LOVE DOCORIO</h2>
-                <p className="text-slate-500 text-xl max-w-2xl mx-auto leading-relaxed">
+                <p className="text-slate-300 text-xl max-w-2xl mx-auto leading-relaxed">
                    We believe document management should be beautiful, effortless, and, above all, 
                    <span className="text-indigo-400 font-bold"> completely private.</span>
                 </p>
@@ -167,7 +168,7 @@ export default function LandingPage() {
                            <item.icon className="text-white" size={28} />
                        </div>
                        <h3 className="text-2xl font-black italic mb-4">{item.title}</h3>
-                       <p className="text-slate-500 text-sm leading-relaxed font-medium">{item.desc}</p>
+                       <p className="text-slate-400 text-sm leading-relaxed font-medium">{item.desc}</p>
                    </motion.div>
                 ))}
             </div>
@@ -189,7 +190,7 @@ export default function LandingPage() {
                                     <span className="text-5xl font-black text-indigo-500/20 group-hover:text-indigo-500 transition-colors uppercase">{s.step}</span>
                                     <div>
                                         <h4 className="text-2xl font-bold mb-2">{s.title}</h4>
-                                        <p className="text-slate-500 leading-relaxed">{s.desc}</p>
+                                         <p className="text-slate-400 leading-relaxed">{s.desc}</p>
                                     </div>
                                 </div>
                             ))}
@@ -234,13 +235,15 @@ export default function LandingPage() {
         <section className="px-6 py-40 max-w-7xl mx-auto">
            <div className="text-center mb-24 space-y-6">
               <h2 className="text-5xl md:text-8xl font-black tracking-tighter italic bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-400 to-slate-700">OUR TOOLS</h2>
-              <p className="text-slate-500 text-xl max-w-2xl mx-auto font-medium">A collection of easy-to-use tools for your daily document work.</p>
+               <p className="text-slate-400 text-xl max-w-2xl mx-auto font-medium">A collection of easy-to-use tools for your daily document work.</p>
            </div>
 
             <div id="tools" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
                  {[
-                     { name: "Convert Files", icon: Shuffle, link: "/convert", desc: "Change your files between PDF, Word, and Images while keeping them perfect.", color: "text-blue-400" },
+                     { name: "Convert Files", icon: Shuffle, link: "/convert", desc: "Change your files between PDF, Word, Excel, PPT, and Images while keeping them perfect.", color: "text-blue-400" },
                      { name: "Organize Pages", icon: Layout, link: "/organize", desc: "Reorder, delete, or rotate pages in your PDF with ease.", color: "text-indigo-400" },
+                     { name: "PDF to Excel", icon: Table, link: "/pdf-to-excel", desc: "Turn your PDF documents into editable Excel spreadsheets.", color: "text-emerald-400" },
+                     { name: "PDF to PPT", icon: Presentation, link: "/pdf-to-pptx", desc: "Convert your PDF pages into dynamic PowerPoint presentations.", color: "text-orange-400" },
                      { name: "PDF to JPG", icon: FileImage, link: "/pdf-to-jpg", desc: "Extract every page into high-quality JPG image files.", color: "text-rose-400" },
                      { name: "Text Scanner", icon: Scan, link: "/scanner", desc: "AI OCR to extract text from images and scanned documents.", color: "text-pink-400" },
                      { name: "Sign PDF", icon: Signature, link: "/sign", desc: "Draw your signature and place it anywhere on any page.", color: "text-amber-400" },
@@ -256,6 +259,9 @@ export default function LandingPage() {
                      { name: "Add Numbers", icon: Hash, link: "/page-numbers", desc: "Automatically add page numbers to your entire document.", color: "text-blue-300" },
                      { name: "Metadata Editor", icon: Tag, link: "/metadata", desc: "Modify hidden properties and file descriptors for better data management.", color: "text-teal-400" },
                      { name: "Flatten PDF", icon: Hammer, link: "/flatten", desc: "Make forms non-editable and merge annotations permanently.", color: "text-rose-500" },
+                     { name: "Redact PDF", icon: Eraser, link: "/redact", desc: "Permanently black out sensitive data and private information.", color: "text-rose-600" },
+                     { name: "Repair PDF", icon: Wrench, link: "/repair", desc: "Fix corridors and broken PDF files that won't open correctly.", color: "text-indigo-400" },
+                     { name: "HTML to PDF", icon: Globe, link: "/html-to-pdf", desc: "Convert any public URL or webpage into a high-quality PDF.", color: "text-cyan-400" },
                      { name: "Images to PDF", icon: ImageIcon, link: "/image-to-pdf", desc: "Turn your photos and screenshots into a clean PDF file.", color: "text-emerald-500" },
                  ].map((tool, i) => (
                     <motion.div
@@ -268,7 +274,7 @@ export default function LandingPage() {
                     >
                         <Link 
                             href={tool.link}
-                            className="p-8 sm:p-12 bg-slate-900 border border-white/5 rounded-[2.5rem] sm:rounded-[3.5rem] hover:border-indigo-500/20 transition-all block h-full group relative overflow-hidden shadow-2xl"
+                            className="p-8 sm:p-12 bg-slate-900 border border-white/5 rounded-[2.5rem] sm:rounded-[3.5rem] hover:border-indigo-500/50 hover:bg-slate-900/80 transition-all block h-full group relative overflow-hidden shadow-2xl"
                         >
                             <div className="flex items-center justify-between mb-6 sm:mb-8">
                                 <div className={cn("p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] bg-slate-950 border border-white/5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500", tool.color)}>
@@ -279,7 +285,7 @@ export default function LandingPage() {
                                 </div>
                             </div>
                             <h3 className="text-2xl sm:text-3xl font-black mb-3 sm:mb-4 group-hover:text-white transition-colors">{tool.name}</h3>
-                            <p className="text-sm sm:text-base text-slate-500 leading-relaxed font-medium">{tool.desc}</p>
+                            <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-medium transition-colors group-hover:text-slate-300">{tool.desc}</p>
                             
                             <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-indigo-500/0 group-hover:via-indigo-500/40 to-transparent transition-all duration-1000"></div>
                         </Link>

@@ -26,14 +26,14 @@ export function SiteHeader() {
                 { name: "Edit", href: "/edit" },
                 { name: "Merge", href: "/merge" },
             ].map((item) => (
-                <Link key={item.name} href={item.href} className="px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+                <Link key={item.name} href={item.href} className="px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
                     {item.name}
                 </Link>
             ))}
         </nav>
 
         <div className="flex items-center gap-4">
-             <Link href="/login" className="hidden md:block text-sm text-slate-400 hover:text-white">Sign In</Link>
+             <Link href="/login" className="hidden md:block text-sm text-slate-300 hover:text-white">Sign In</Link>
              <Link href="/register">
                  <Button size="sm" className="bg-white text-slate-900 hover:bg-slate-200 font-bold">
                      Get Started

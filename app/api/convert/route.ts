@@ -137,6 +137,77 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Handle PDF to XLSX
+    if (convertType === "xlsx" && files.some(f => f.type === "application/pdf")) {
+      const pdfParse = require("pdf-parse")
+      const XLSX = require("xlsx")
+
+      const file = files[0]
+      const buffer = Buffer.from(await file.arrayBuffer())
+
+      try {
+        const data = await pdfParse(buffer)
+        const textContent = data.text
+        const rows = textContent.split('\n').map((line: string) => [line])
+
+        const wb = XLSX.utils.book_new()
+        const ws = XLSX.utils.aoa_to_sheet(rows)
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1")
+
+        const outputFilename = `converted-${Date.now()}.xlsx`
+        const outputFile = join(UPLOAD_DIR, outputFilename)
+        XLSX.writeFile(wb, outputFile)
+
+        await createOrUpdateUsageTracking(user.userId, "conversions_used", 1)
+
+        return NextResponse.json({
+          downloadUrl: `/uploads/${outputFilename}`,
+          filename: outputFilename,
+        })
+      } catch (e) {
+        console.error("XLSX Error:", e)
+        return NextResponse.json({ error: "Excel conversion failed" }, { status: 500 })
+      }
+    }
+
+    // Handle PDF to PPTX
+    if (convertType === "pptx" && files.some(f => f.type === "application/pdf")) {
+      const pdfParse = require("pdf-parse")
+      const PptxGenJS = require("pptxgenjs")
+
+      const file = files[0]
+      const buffer = Buffer.from(await file.arrayBuffer())
+
+      try {
+        const data = await pdfParse(buffer)
+        const textContent = data.text
+
+        const pres = new PptxGenJS()
+
+        // Split text into slides (approx 1000 chars per slide for basic structure)
+        const chunks = textContent.match(/[\s\S]{1,1500}/g) || [textContent]
+
+        chunks.forEach((chunk: string) => {
+          const slide = pres.addSlide()
+          slide.addText(chunk, { x: 0.5, y: 0.5, w: '90%', h: '90%', fontSize: 12, color: '363636' })
+        })
+
+        const outputFilename = `converted-${Date.now()}.pptx`
+        const outputFile = join(UPLOAD_DIR, outputFilename)
+        await pres.writeFile({ fileName: outputFile })
+
+        await createOrUpdateUsageTracking(user.userId, "conversions_used", 1)
+
+        return NextResponse.json({
+          downloadUrl: `/uploads/${outputFilename}`,
+          filename: outputFilename,
+        })
+      } catch (e) {
+        console.error("PPTX Error:", e)
+        return NextResponse.json({ error: "PowerPoint conversion failed" }, { status: 500 })
+      }
+    }
+
     if (convertType === "pdf") {
       const tempFiles: string[] = []
 

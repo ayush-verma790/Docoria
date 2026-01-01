@@ -90,7 +90,7 @@ export default function CompressPage() {
            <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400">
              Smart Compress
            </h1>
-           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+           <p className="text-lg text-slate-300 max-w-2xl mx-auto">
              Reduce file size without losing quality. Ideal for email uploads and web optimization.
            </p>
         </div>
@@ -102,8 +102,8 @@ export default function CompressPage() {
                     {!result ? (
                         <div className="space-y-8">
                             <div>
-                                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                    <span className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs">1</span>
+                                <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                    <span className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white">1</span>
                                     Select File
                                 </h3>
                                 <FileUploader 
@@ -113,16 +113,16 @@ export default function CompressPage() {
                             </div>
 
                             <div className={cn("transition-all duration-500", !file ? "opacity-50 blur-[2px] pointer-events-none" : "opacity-100")}>
-                                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                                    <span className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs">2</span>
+                                <h3 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                    <span className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white">2</span>
                                     Compression Method
                                 </h3>
                                 
                                 <Tabs value={mode} onValueChange={(v) => setMode(v as any)} className="w-full">
                                     <TabsList className="grid w-full grid-cols-3 mb-6 p-1 bg-slate-950/50 border border-white/5 rounded-xl h-12">
-                                        <TabsTrigger value="preset" className="h-10 rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">Preset</TabsTrigger>
-                                        <TabsTrigger value="target" className="h-10 rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">Target Size</TabsTrigger>
-                                        <TabsTrigger value="custom" className="h-10 rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white">Custom</TabsTrigger>
+                                        <TabsTrigger value="preset" className="h-10 rounded-lg text-slate-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white">Preset</TabsTrigger>
+                                        <TabsTrigger value="target" className="h-10 rounded-lg text-slate-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white">Target Size</TabsTrigger>
+                                        <TabsTrigger value="custom" className="h-10 rounded-lg text-slate-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white">Custom</TabsTrigger>
                                     </TabsList>
 
                                     <TabsContent value="preset" className="space-y-4">
@@ -138,9 +138,9 @@ export default function CompressPage() {
                                                         htmlFor={option.id}
                                                         className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/10 bg-slate-950/50 hover:bg-slate-800 peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-600/10 peer-data-[state=checked]:text-blue-400 cursor-pointer transition-all h-full group"
                                                     >
-                                                        <option.icon className="mb-3 w-6 h-6 text-slate-500 group-hover:text-blue-400 peer-data-[state=checked]:text-blue-500" />
-                                                        <span className="font-semibold text-sm mb-1">{option.label}</span>
-                                                        <span className="text-xs text-slate-500">{option.desc}</span>
+                                                        <option.icon className="mb-3 w-6 h-6 text-slate-400 group-hover:text-blue-400 peer-data-[state=checked]:text-blue-500" />
+                                                        <span className="font-semibold text-sm mb-1 text-white">{option.label}</span>
+                                                        <span className="text-xs text-slate-400 peer-data-[state=checked]:text-blue-400/80">{option.desc}</span>
                                                     </Label>
                                                 </div>
                                             ))}
@@ -225,24 +225,24 @@ export default function CompressPage() {
 
                             <div className="bg-slate-950/50 rounded-2xl p-8 grid grid-cols-1 md:grid-cols-3 gap-8 items-center border border-white/5">
                                 <div className="text-center space-y-2">
-                                    <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Original</p>
+                                    <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">Original</p>
                                     <p className="text-2xl font-bold">{(result.originalSize / 1024 / 1024).toFixed(2)} MB</p>
                                 </div>
                                 <div className="flex flex-col items-center justify-center gap-2">
-                                    <ArrowRight className="text-slate-600 hidden md:block" />
-                                    <ArrowRight className="text-slate-600 md:hidden rotate-90" />
+                                    <ArrowRight className="text-slate-400 hidden md:block" />
+                                    <ArrowRight className="text-slate-400 md:hidden rotate-90" />
                                     <span className="text-sm font-bold text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
                                         -{reduction}%
                                     </span>
                                 </div>
                                 <div className="text-center space-y-2">
-                                    <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Compressed</p>
+                                    <p className="text-xs text-slate-400 uppercase tracking-widest font-bold">Compressed</p>
                                     <p className="text-2xl font-bold text-emerald-500">{(result.compressedSize / 1024 / 1024).toFixed(2)} MB</p>
                                 </div>
                             </div>
 
                             <div className="flex gap-4 flex-col sm:flex-row">
-                                <Button variant="ghost" onClick={() => setResult(null)} className="flex-1 h-14 text-slate-400 hover:text-white hover:bg-white/5">
+                                 <Button variant="ghost" onClick={() => setResult(null)} className="flex-1 h-14 text-slate-300 hover:text-white hover:bg-white/5">
                                     Compress Another
                                 </Button>
                                 <a href={result.downloadUrl} download className="flex-1">
@@ -263,7 +263,7 @@ export default function CompressPage() {
                     <h3 className="font-bold text-white mb-4 flex items-center gap-2">
                         <Star className="w-4 h-4 text-yellow-500" /> Why Compress?
                     </h3>
-                    <ul className="space-y-4 text-sm text-slate-400">
+                    <ul className="space-y-4 text-sm text-slate-300">
                         <li className="flex items-start gap-3">
                             <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />
                             Faster upload and download speeds
@@ -291,5 +291,4 @@ export default function CompressPage() {
     </div>
   )
 }
-
 

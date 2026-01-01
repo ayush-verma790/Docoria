@@ -59,6 +59,7 @@
     "pdf-parse": "^2.4.5",
     "pdfjs-dist": "^5.4.530",
     "pdfkit": "^0.17.2",
+    "pptxgenjs": "^4.0.1",
     "qrcode": "^1.5.4",
     "react": "19.2.0",
     "react-day-picker": "9.8.0",
@@ -74,6 +75,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tesseract.js": "^7.0.0",
     "vaul": "^1.1.2",
+    "xlsx": "^0.18.5",
     "zod": "3.25.76"
   },
   "devDependencies": {

@@ -67,7 +67,7 @@ export default function QrCodePage() {
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400">
                     QR Code Generator
                 </h1>
-                <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+                <p className="text-lg text-slate-300 max-w-2xl mx-auto">
                     Create instant QR codes for URLs, text, Wi-Fi, and more.
                 </p>
             </div>
@@ -83,7 +83,7 @@ export default function QrCodePage() {
                             onChange={(e) => generateQr(e.target.value)}
                             className="bg-slate-950 border-white/10 h-14 text-lg text-white placeholder:text-slate-500"
                         />
-                        <p className="text-xs text-slate-500">Your QR code will update automatically as you type.</p>
+                        <p className="text-xs text-slate-400">Your QR code will update automatically as you type.</p>
                     </div>
 
                     <div className="flex gap-4 pt-4">
@@ -117,9 +117,9 @@ export default function QrCodePage() {
                              />
                          </div>
                     ) : (
-                        <div className="text-center text-slate-500 space-y-4">
+                        <div className="text-center text-slate-400 space-y-4">
                             <div className="w-24 h-24 bg-slate-800 rounded-xl mx-auto flex items-center justify-center border border-white/5">
-                                <QrCode className="w-10 h-10 opacity-20" />
+                                <QrCode className="w-10 h-10 opacity-40" />
                             </div>
                             <p>Enter text to generate preview</p>
                         </div>

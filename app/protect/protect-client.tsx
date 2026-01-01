@@ -65,7 +65,7 @@ export default function ProtectPage() {
                  <Lock className="w-8 h-8 text-white" />
              </div>
              <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400 mb-2">Protect PDF</h1>
-             <p className="text-slate-400">Encrypt your documents with military-grade AES encryption.</p>
+             <p className="text-slate-300">Encrypt your documents with military-grade AES encryption.</p>
         </div>
 
         <Card className="p-8 bg-slate-900/50 border-white/10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
@@ -137,7 +137,7 @@ export default function ProtectPage() {
                           </Button>
                       </a>
                       
-                      <Button variant="ghost" className="text-slate-500 hover:text-white" onClick={() => {setResult(null); setPassword(""); setFile(null);}}>
+                       <Button variant="ghost" className="text-slate-300 hover:text-white" onClick={() => {setResult(null); setPassword(""); setFile(null);}}>
                           Encrypt Another File
                       </Button>
                  </div>

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://docorio.com'
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://docoria-bzu7.vercel.app/"
 
     const routes = [
         '',
@@ -23,6 +23,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/metadata',
         '/flatten',
         '/resize',
+        '/redact',
+        '/repair',
+        '/html-to-pdf',
+        '/pdf-to-excel',
+        '/pdf-to-pptx',
     ]
 
     return routes.map((route) => ({

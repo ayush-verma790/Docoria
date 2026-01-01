@@ -4,19 +4,24 @@ import { useState, useEffect } from "react"
 import { FileUploader } from "@/components/file-uploader"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Loader2, Download, FileType, Image as ImageIcon, FileText, ArrowRight, RefreshCw, CheckCircle, Zap } from "lucide-react"
+import { Loader2, Download, FileType, Image as ImageIcon, FileText, ArrowRight, RefreshCw, CheckCircle, Zap, Table, Presentation } from "lucide-react"
 import { pdfjs } from "react-pdf"
 import { SiteHeader } from "@/components/site-header"
 import "react-pdf/dist/Page/TextLayer.css"
 
-type ConvertFormat = "pdf" | "docx" | "png" | "jpg" | "webp" | "tiff" | "avif" | "gif" | "bmp"
+type ConvertFormat = "pdf" | "docx" | "png" | "jpg" | "webp" | "tiff" | "avif" | "gif" | "bmp" | "xlsx" | "pptx"
 
-export default function ConvertClient() {
+export default function ConvertClient({ initialFormat = "pdf" }: { initialFormat?: ConvertFormat }) {
   const [files, setFiles] = useState<File[]>([])
-  const [targetFormat, setTargetFormat] = useState<ConvertFormat>("pdf")
+  const [targetFormat, setTargetFormat] = useState<ConvertFormat>(initialFormat)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isConverting, setIsConverting] = useState(false)
   const [result, setResult] = useState<{ downloadUrl: string; filename: string; blob: Blob } | null>(null)
   const [error, setError] = useState("")
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePosition({ x: e.clientX, y: e.clientY })
+  }
 
   useEffect(() => {
     // Configure PDF.js worker only on client
@@ -112,27 +117,36 @@ export default function ConvertClient() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white selection:bg-cyan-500/30">
+    <div 
+        className="min-h-screen bg-[#020617] text-slate-200 selection:bg-indigo-500/30 font-sans relative overflow-hidden"
+        onMouseMove={handleMouseMove}
+    >
         <SiteHeader />
         
         {/* Background Ambience */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-cyan-600/10 rounded-full blur-[120px]"></div>
-            <div className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] bg-purple-600/10 rounded-full blur-[120px]"></div>
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-[-10%] left-[-10%] w-[1000px] h-[1000px] bg-indigo-500/5 rounded-full blur-[120px]"></div>
+            <div 
+                className="absolute w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[140px] transition-transform duration-700 ease-out"
+                style={{ 
+                    transform: `translate(${mousePosition.x - 300}px, ${mousePosition.y - 300}px)` 
+                }}
+            ></div>
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150 brightness-50"></div>
         </div>
 
-      <div className="relative pt-32 pb-20 px-6 max-w-6xl mx-auto">
+      <div className="relative z-10 pt-32 pb-20 px-6 max-w-6xl mx-auto">
         
         {/* Header Section */}
-        <div className="text-center mb-16 space-y-4">
-             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 mb-4 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
-                 <RefreshCw className="w-8 h-8 text-cyan-500" />
+        <div className="text-center mb-16 space-y-6">
+             <div className="inline-flex items-center justify-center w-20 h-20 rounded-[2rem] bg-indigo-500/10 border border-indigo-500/20 mb-4 shadow-xl group hover:scale-110 transition-transform duration-500">
+                 <RefreshCw className="w-10 h-10 text-indigo-500 group-hover:rotate-180 transition-transform duration-700" />
              </div>
-             <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400">
+             <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter leading-none uppercase">
                  File Converter
              </h1>
-             <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-                 Change your files quickly between PDF, Images, and Word formats.
+             <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium">
+                 Professional conversion between PDF, Word, Excel, and Images with surgical precision.
              </p>
         </div>
 
@@ -144,6 +158,8 @@ export default function ConvertClient() {
                     { icon: FileType, label: "PDF to Word", sub: "PDF to DOCX", color: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/20", format: "docx" },
                     { icon: ImageIcon, label: "PDF to Image", sub: "PDF to JPG/PNG", color: "text-purple-400", bg: "bg-purple-400/10", border: "border-purple-400/20", format: "jpg" },
                     { icon: RefreshCw, label: "Image Format", sub: "Convert Images", color: "text-green-400", bg: "bg-green-400/10", border: "border-green-400/20", format: "png" },
+                    { icon: Table, label: "PDF to Excel", sub: "PDF to XLSX", color: "text-emerald-400", bg: "bg-emerald-400/10", border: "border-emerald-400/20", format: "xlsx" },
+                    { icon: Presentation, label: "PDF to PPT", sub: "PDF to PPTX", color: "text-orange-400", bg: "bg-orange-400/10", border: "border-orange-400/20", format: "pptx" },
                 ].map((item) => (
                     <button 
                         key={item.label}
@@ -154,7 +170,7 @@ export default function ConvertClient() {
                             <item.icon className={`${item.color} w-6 h-6`} />
                         </div>
                         <div className="font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">{item.label}</div>
-                        <div className="text-xs text-slate-500 font-medium">{item.sub}</div>
+                        <div className="text-xs text-slate-400 font-medium">{item.sub}</div>
                     </button>
                 ))}
             </div>
@@ -166,7 +182,7 @@ export default function ConvertClient() {
                {/* Left: Input */}
                <div className="space-y-6">
                  <div>
-                   <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                   <h2 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
                      <span className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white">1</span> Source File
                    </h2>
                    <FileUploader
@@ -181,7 +197,7 @@ export default function ConvertClient() {
                         <FileText className="text-cyan-400 w-5 h-5" />
                      </div>
                      <span className="font-medium text-slate-200 truncate flex-1">{files[0].name}</span>
-                     <button onClick={() => setFiles([])} className="text-slate-500 hover:text-white transition-colors">Change</button>
+                     <button onClick={() => setFiles([])} className="text-slate-300 hover:text-white transition-colors">Change</button>
                    </div>
                  )}
                </div>
@@ -189,13 +205,13 @@ export default function ConvertClient() {
                {/* Right: Settings */}
                <div className={`space-y-6 transition-all duration-500 ${files.length === 0 ? "opacity-50 blur-sm pointer-events-none" : "opacity-100"}`}>
                  <div>
-                    <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <h2 className="text-sm font-bold text-slate-300 uppercase tracking-widest mb-4 flex items-center gap-2">
                          <span className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs text-white">2</span> Convert To
                     </h2>
                  </div>
 
                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-3"> 
-                    {(["pdf", "docx", "png", "jpg", "webp", "tiff", "avif", "gif"] as const).map((fmt) => (
+                    {(["pdf", "docx", "xlsx", "pptx", "png", "jpg", "webp", "tiff", "avif", "gif"] as const).map((fmt) => (
                         <button
                             key={fmt}
                             onClick={() => setTargetFormat(fmt)}
@@ -254,7 +270,7 @@ export default function ConvertClient() {
                       <Button 
                         variant="ghost" 
                         onClick={() => { setResult(null); setFiles([]); }}
-                        className="flex-1 h-14 text-slate-400 hover:text-white hover:bg-white/5"
+                        className="flex-1 h-14 text-slate-300 hover:text-white hover:bg-white/5"
                       >
                           Convert Another
                       </Button>
