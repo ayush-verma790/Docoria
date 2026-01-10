@@ -9,13 +9,13 @@ export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-background/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3 group">
-           <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(79,70,229,0.4)] group-hover:scale-110 transition-transform duration-500">
+           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-[0_0_20px_var(--color-primary)] group-hover:scale-110 transition-transform duration-500">
                <Layers size={20} />
            </div>
-           <span className="text-white font-black text-2xl tracking-tighter italic">DOCORIO</span>
+           <span className="text-foreground font-black text-2xl tracking-tighter italic">DOCORIO</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -51,7 +51,7 @@ export function SiteHeader() {
                  initial={{ height: 0, opacity: 0 }} 
                  animate={{ height: "auto", opacity: 1 }} 
                  exit={{ height: 0, opacity: 0 }}
-                 className="md:hidden border-t border-white/5 bg-slate-900 overflow-hidden"
+                 className="md:hidden border-t border-white/5 bg-background overflow-hidden"
               >
                   <nav className="flex flex-col p-4 gap-2">
                     {[

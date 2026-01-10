@@ -1,42 +1,55 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Plus_Jakarta_Sans } from "next/font/google"
+import { Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
-const plusJakarta = Plus_Jakarta_Sans({ 
+const outfit = Outfit({ 
   subsets: ["latin"],
-  variable: "--font-plus-jakarta"
+  variable: "--font-outfit"
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://docorio-bzu7.vercel.app"),
   title: {
     default: "Docorio — #1 Free All-in-One Document Suite",
     template: "%s | Docorio"
   },
-  description: "Transform any file into a high-quality PDF or convert PDFs to Word, Excel, PowerPoint, images, and other formats. Docorio offers lightning-fast merging, splitting, compression, and professional PDF tools—all processed privately in your browser.",
+  description: "The world's fastest and most secure document tools. Transform any file into high-quality PDF, convert to Word/Excel, merge, split, and sign documents locally in your browser. 100% Free & Private.",
   keywords: [
-    "AI PDF tools", "PDF editor online", "Merge PDF free", "Split PDF", "Compress PDF size", 
-    "PDF to Word converter", "Word to PDF", "OCR PDF searchable", "Sign PDF e-signature", 
-    "summarize PDF AI", "extract data from PDF", "secure document sharing", 
-    "document workflow automation", "cloud document management", "legal document management",
-    "contract management software", "free PDF tools", "PDF automation"
+    "Docorio", "Free PDF Editor", "Merge PDF", "Split PDF", "Compress PDF", 
+    "PDF to Word", "PDF to Excel", "Word to PDF", "Image to PDF", "JPG to PDF", 
+    "PNG to PDF", "OCR PDF", "Scan to Text", "eSign PDF", "Sign PDF Online", 
+    "Unlock PDF", "Protect PDF", "Watermark PDF", "PDF Organizer", "Rotate PDF",
+    "Flatten PDF", "Redact PDF", "Repair PDF", "HTML to PDF", "Resize PDF",
+    "Add Page Numbers to PDF", "Edit PDF Metadata", "Secure PDF Tools", 
+    "Browser-based PDF", "Local PDF Processing", "Best PDF Converter 2026"
   ],
-  authors: [{ name: "Docorio Team" }],
+  authors: [{ name: "Docorio Team", url: "https://docorio.com" }],
   creator: "Docorio",
+  publisher: "Docorio Global",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://docorio.com",
-    title: "Docorio — #1 AI-Powered All-in-One Document Workspace",
-    description: "Combine, split, and convert documents with the speed of light. AI-enhanced summarization and secure OCR.",
+    url: "/",
+    title: "Docorio — #1 Free All-in-One Document Suite",
+    description: "Transform, Convert, Edit, and Sign PDFs instantly. No uploads required - 100% secure local processing. The fastest way to manage documents.",
     siteName: "Docorio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Docorio Document Suite",
+      }
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Docorio — Document Management Redefined",
-    description: "The #1 choice for fast and secure document processing.",
+    title: "Docorio — #1 Free All-in-One Document Suite",
+    description: "Transform, Convert, Edit, and Sign PDFs instantly. No uploads required - 100% secure local processing.",
     creator: "@docorio",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -49,23 +62,20 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  generator: "v0.app",
+  applicationName: "Docorio",
+  appleWebApp: {
+    capable: true,
+    title: "Docorio",
+    statusBarStyle: "default",
+  },
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
     apple: "/apple-icon.png",
+    other: {
+      rel: "apple-touch-icon-precomposed",
+      url: "/apple-icon.png",
+    },
   },
   verification: {
     google: "nV_VxMMDUuY4FLrke-HpbRTgYR8YzId48PQ9IhJN18g",
@@ -74,8 +84,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={plusJakarta.variable}>
-      <body className={`${plusJakarta.className} antialiased bg-slate-950 text-slate-200 selection:bg-violet-500/30 selection:text-violet-200 uppercase-headings`}>
+    <html lang="en" className={outfit.variable}>
+      <body className={`${outfit.className} antialiased bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground`}>
         {children}
         <Analytics />
       </body>

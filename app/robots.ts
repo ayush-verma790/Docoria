@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/api/', '/dashboard/'],
         },
-        sitemap: 'https://docorio.com/sitemap.xml',
+        sitemap: `${process.env.NEXT_PUBLIC_BASE_URL || "https://docorio-bzu7.vercel.app"}/sitemap.xml`,
     }
 }

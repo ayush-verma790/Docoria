@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server"
 // List of paths that require authentication
 // The user specifically requested "Sign & Edit" to be protected.
 // We also protect dashboard as it usually contains user-specific data.
-const PROTECTED_PATHS = ["/edit", "/sign", "/dashboard"]
+const PROTECTED_PATHS: string[] = []
 
 export function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname

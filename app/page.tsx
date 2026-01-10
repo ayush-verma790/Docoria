@@ -34,7 +34,7 @@ export default function LandingPage() {
   return (
     <div 
       ref={containerRef}
-      className="min-h-screen bg-[#020617] text-slate-200 overflow-x-hidden font-sans selection:bg-indigo-500/30 selection:text-indigo-200"
+      className="min-h-screen bg-background text-foreground overflow-x-hidden font-sans selection:bg-primary/30 selection:text-primary-foreground"
       onMouseMove={handleMouseMove}
     >
       <script
@@ -68,9 +68,9 @@ export default function LandingPage() {
 
       {/* Dynamic Background Atmosphere */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[1000px] h-[10000px] bg-indigo-500/5 rounded-full blur-[120px] animate-pulse"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[1000px] h-[10000px] bg-primary/10 rounded-full blur-[120px] animate-pulse"></div>
         <motion.div 
-          className="absolute w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[140px]"
+          className="absolute w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[140px]"
           style={{ left: mouseX, top: mouseY, translateX: '-50%', translateY: '-50%' }}
         />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 contrast-150 brightness-50"></div>
@@ -87,31 +87,31 @@ export default function LandingPage() {
             className="space-y-8 max-w-4xl"
           >
             {/* Simple Tagline */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-semibold text-indigo-400">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-semibold text-primary">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Free Forever • Simple & Private</span>
             </div>
             
             <h1 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight leading-[1.1]">
               The Easiest Way to <br />
-              <span className="text-indigo-500">Manage Your PDFs</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-400 animate-gradient">Manage Your PDFs</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Transform any file into a high-quality PDF or convert PDFs to Word, Excel, PowerPoint, images, and other formats. 
-              Experience lightning-fast conversion, merging, splitting, and more—all processed <span className="text-white">securely in your browser.</span>
+              Experience lightning-fast conversion, merging, splitting, and more—all processed <span className="text-foreground font-semibold">securely in your browser.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-4">
               <Link href="/convert" className="w-full sm:w-auto">
-                <Button size="lg" className="h-16 w-full sm:w-[220px] rounded-2xl bg-indigo-600 text-white hover:bg-indigo-500 font-bold text-lg shadow-2xl shadow-indigo-500/20 group">
+                <Button size="lg" className="h-16 w-full sm:w-[220px] rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-lg shadow-2xl shadow-primary/20 group transition-all hover:scale-105">
                   Start Now <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="h-16 w-full sm:w-[220px] rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 text-white font-bold text-lg backdrop-blur-sm"
+                className="h-16 w-full sm:w-[220px] rounded-2xl border-white/10 bg-white/5 hover:bg-white/10 text-foreground font-bold text-lg backdrop-blur-lg transition-all hover:scale-105"
                 onClick={() => document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 View All Tools
@@ -121,8 +121,8 @@ export default function LandingPage() {
         </section>
 
         {/* STATS SECTION - High trust indicators */}
-        <section className="px-6 py-20 border-y border-white/5 bg-white/[0.02]">
-            <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+        <section className="px-6 py-20 border-y border-border bg-primary/5 text-center">
+            <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12">
                 {[
                     { label: "Daily Files", value: "1.2M+", icon: FileText },
                     { label: "Active Users", value: "500K+", icon: Users },
@@ -131,10 +131,10 @@ export default function LandingPage() {
                 ].map((stat, i) => (
                     <div key={i} className="space-y-2">
                         <div className="flex justify-center mb-4">
-                            <stat.icon size={24} className="text-indigo-400 opacity-50" />
+                            <stat.icon size={24} className="text-primary opacity-70" />
                         </div>
-                        <h4 className="text-3xl md:text-4xl font-black text-white">{stat.value}</h4>
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{stat.label}</p>
+                        <h4 className="text-3xl md:text-4xl font-black text-foreground">{stat.value}</h4>
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{stat.label}</p>
                     </div>
                 ))}
             </div>
@@ -143,10 +143,10 @@ export default function LandingPage() {
         {/* THE "WHY" SECTION - More Attractive Text */}
         <section className="px-6 py-32 max-w-7xl mx-auto">
             <div className="text-center space-y-6 mb-24">
-                <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter">WHY PEOPLE LOVE DOCORIO</h2>
-                <p className="text-slate-300 text-xl max-w-2xl mx-auto leading-relaxed">
+                <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter text-foreground">WHY PEOPLE LOVE DOCORIO</h2>
+                <p className="text-muted-foreground text-xl max-w-2xl mx-auto leading-relaxed">
                    We believe document management should be beautiful, effortless, and, above all, 
-                   <span className="text-indigo-400 font-bold"> completely private.</span>
+                   <span className="text-primary font-bold"> completely private.</span>
                 </p>
             </div>
 
@@ -162,20 +162,20 @@ export default function LandingPage() {
                      initial={{ opacity: 0, scale: 0.9 }}
                      whileInView={{ opacity: 1, scale: 1 }}
                      transition={{ delay: i * 0.1 }}
-                     className="group relative p-10 rounded-[2.5rem] bg-slate-900/40 border border-white/5 hover:border-indigo-500/40 transition-all hover:bg-slate-900/70 overflow-hidden"
+                     className="group relative p-10 rounded-[2.5rem] bg-card border border-border hover:border-primary/40 transition-all hover:bg-card/80 overflow-hidden shadow-lg"
                    >
                        <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-8 bg-gradient-to-br shadow-xl group-hover:rotate-6 transition-transform", item.color)}>
                            <item.icon className="text-white" size={28} />
                        </div>
-                       <h3 className="text-2xl font-black italic mb-4">{item.title}</h3>
-                       <p className="text-slate-400 text-sm leading-relaxed font-medium">{item.desc}</p>
+                       <h3 className="text-2xl font-black italic mb-4 text-foreground">{item.title}</h3>
+                       <p className="text-muted-foreground text-sm leading-relaxed font-medium">{item.desc}</p>
                    </motion.div>
                 ))}
             </div>
         </section>
 
         {/* DETAILED PROCESS - "HOW IT WORKS" */}
-        <section className="px-6 py-32 bg-indigo-500/5">
+        <section className="px-6 py-32 bg-primary/5">
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row gap-20 items-center">
                     <div className="flex-1 space-y-10">
@@ -187,7 +187,7 @@ export default function LandingPage() {
                                 { step: "03", title: "Download & Relax", desc: "Get your perfectly modified file back. Your data is automatically cleared from memory." },
                             ].map((s, i) => (
                                 <div key={i} className="flex gap-8 group">
-                                    <span className="text-5xl font-black text-indigo-500/20 group-hover:text-indigo-500 transition-colors uppercase">{s.step}</span>
+                                    <span className="text-5xl font-black text-primary/20 group-hover:text-primary transition-colors uppercase">{s.step}</span>
                                     <div>
                                         <h4 className="text-2xl font-bold mb-2">{s.title}</h4>
                                          <p className="text-slate-400 leading-relaxed">{s.desc}</p>
@@ -196,11 +196,11 @@ export default function LandingPage() {
                             ))}
                         </div>
                     </div>
-                    <div className="flex-1 relative w-full aspect-square bg-slate-900 border border-white/5 rounded-[4rem] flex items-center justify-center overflow-hidden shadow-2xl">
-                         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent"></div>
-                         <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="w-2/3 h-2/3 border border-white/5 rounded-full flex items-center justify-center">
-                            <motion.div animate={{ rotate: -360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="w-2/3 h-2/3 border border-indigo-500/10 rounded-full flex items-center justify-center">
-                                <Rocket size={64} className="text-indigo-400 animate-bounce" />
+                    <div className="flex-1 relative w-full aspect-square bg-card border border-border rounded-[4rem] flex items-center justify-center overflow-hidden shadow-2xl">
+                         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
+                         <motion.div animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="w-2/3 h-2/3 border border-border rounded-full flex items-center justify-center">
+                            <motion.div animate={{ rotate: -360 }} transition={{ duration: 15, repeat: Infinity, ease: "linear" }} className="w-2/3 h-2/3 border border-primary/10 rounded-full flex items-center justify-center">
+                                <Rocket size={64} className="text-primary animate-bounce" />
                             </motion.div>
                          </motion.div>
                     </div>
@@ -274,20 +274,20 @@ export default function LandingPage() {
                     >
                         <Link 
                             href={tool.link}
-                            className="p-8 sm:p-12 bg-slate-900 border border-white/5 rounded-[2.5rem] sm:rounded-[3.5rem] hover:border-indigo-500/50 hover:bg-slate-900/80 transition-all block h-full group relative overflow-hidden shadow-2xl"
+                            className="p-8 sm:p-12 bg-card border border-border rounded-[2.5rem] sm:rounded-[3.5rem] hover:border-primary/50 hover:bg-card/80 transition-all block h-full group relative overflow-hidden shadow-lg"
                         >
                             <div className="flex items-center justify-between mb-6 sm:mb-8">
-                                <div className={cn("p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] bg-slate-950 border border-white/5 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500", tool.color)}>
+                                <div className={cn("p-4 sm:p-5 rounded-[1.25rem] sm:rounded-[1.5rem] bg-background border border-border group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500", tool.color)}>
                                     <tool.icon size={28} className="sm:w-8 sm:h-8" />
                                 </div>
-                                <div className="p-2 sm:p-3 rounded-full bg-white/5 text-slate-700 group-hover:bg-indigo-500 group-hover:text-white transition-all">
+                                <div className="p-2 sm:p-3 rounded-full bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                                     <ArrowRight size={18} className="sm:w-5 sm:h-5" />
                                 </div>
                             </div>
-                            <h3 className="text-2xl sm:text-3xl font-black mb-3 sm:mb-4 group-hover:text-white transition-colors">{tool.name}</h3>
-                            <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-medium transition-colors group-hover:text-slate-300">{tool.desc}</p>
+                            <h3 className="text-2xl sm:text-3xl font-black mb-3 sm:mb-4 group-hover:text-foreground transition-colors">{tool.name}</h3>
+                            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed font-medium transition-colors group-hover:text-foreground/80">{tool.desc}</p>
                             
-                            <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-indigo-500/0 group-hover:via-indigo-500/40 to-transparent transition-all duration-1000"></div>
+                            <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-transparent via-primary/0 group-hover:via-primary/70 to-transparent transition-all duration-1000"></div>
                         </Link>
                     </motion.div>
                  ))}
@@ -296,12 +296,12 @@ export default function LandingPage() {
 
         {/* FINAL IMPACT CTA */}
         <section className="px-6 py-60 text-center relative overflow-hidden">
-             <div className="absolute inset-0 bg-indigo-600/5 blur-[150px] pointer-events-none"></div>
+             <div className="absolute inset-0 bg-primary/10 blur-[150px] pointer-events-none"></div>
              <div className="max-w-4xl mx-auto space-y-12 relative">
-                 <h2 className="text-7xl md:text-9xl font-black tracking-tighter italic leading-none animate-pulse">START <br /> DOCORIO</h2>
-                 <p className="text-slate-400 text-2xl max-w-2xl mx-auto font-medium">Join the next generation of document management today. Free, fast, and secure.</p>
+                 <h2 className="text-7xl md:text-9xl font-black tracking-tighter italic leading-none animate-pulse text-foreground">START <br /> DOCORIO</h2>
+                 <p className="text-muted-foreground text-2xl max-w-2xl mx-auto font-medium">Join the next generation of document management today. Free, fast, and secure.</p>
                  <Link href="/convert">
-                    <Button size="lg" className="rounded-full px-20 h-24 bg-indigo-600 hover:bg-indigo-500 text-white font-black text-3xl shadow-[0_40px_100px_rgba(79,70,229,0.4)] transition-all">
+                    <Button size="lg" className="rounded-full px-20 h-24 bg-primary hover:bg-primary/80 text-background font-black text-3xl shadow-[0_40px_100px_rgba(168,85,247,0.4)] transition-all">
                         GET STARTED NOW
                     </Button>
                  </Link>
@@ -309,56 +309,56 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="px-6 pt-32 pb-16 border-t border-white/5 bg-[#01040f] relative z-10">
+      <footer className="px-6 pt-32 pb-16 border-t border-border bg-background relative z-10">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
               <div className="space-y-8">
                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-xl shadow-indigo-500/20">
+                        <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground shadow-xl shadow-primary/20">
                             <Layers size={24} />
                         </div>
-                        <span className="text-white font-black text-3xl tracking-tighter uppercase">DOCORIO</span>
+                        <span className="text-foreground font-black text-3xl tracking-tighter uppercase">DOCORIO</span>
                    </div>
-                   <p className="text-slate-400 text-lg leading-relaxed">
+                   <p className="text-muted-foreground text-lg leading-relaxed">
                        Making document tools easy, fast, and private for everyone. No complicated software, just your browser.
                    </p>
               </div>
 
               <div className="space-y-6">
-                  <h4 className="text-white font-bold text-xl">Top Tools</h4>
-                  <ul className="space-y-4 text-slate-400 text-lg">
-                      <li><Link href="/merge" className="hover:text-indigo-400 transition-colors">Merge PDF</Link></li>
-                      <li><Link href="/convert" className="hover:text-indigo-400 transition-colors">Convert Files</Link></li>
-                      <li><Link href="/sign" className="hover:text-indigo-400 transition-colors">Sign PDF</Link></li>
-                      <li><Link href="/compress" className="hover:text-indigo-400 transition-colors">Compress Size</Link></li>
+                  <h4 className="text-foreground font-bold text-xl">Top Tools</h4>
+                  <ul className="space-y-4 text-muted-foreground text-lg">
+                      <li><Link href="/merge" className="hover:text-primary transition-colors">Merge PDF</Link></li>
+                      <li><Link href="/convert" className="hover:text-primary transition-colors">Convert Files</Link></li>
+                      <li><Link href="/sign" className="hover:text-primary transition-colors">Sign PDF</Link></li>
+                      <li><Link href="/compress" className="hover:text-primary transition-colors">Compress Size</Link></li>
                   </ul>
               </div>
 
               <div className="space-y-6">
-                  <h4 className="text-white font-bold text-xl">Privacy</h4>
-                  <ul className="space-y-4 text-slate-400 text-lg">
-                      <li><a href="#" className="hover:text-indigo-400 transition-colors">Privacy Policy</a></li>
-                      <li><a href="#" className="hover:text-indigo-400 transition-colors">Terms of Service</a></li>
-                      <li><a href="#" className="hover:text-indigo-400 transition-colors">Security Info</a></li>
-                      <li><a href="#" className="hover:text-indigo-400 transition-colors">Cookie Policy</a></li>
+                  <h4 className="text-foreground font-bold text-xl">Privacy</h4>
+                  <ul className="space-y-4 text-muted-foreground text-lg">
+                      <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
+                      <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
+                      <li><a href="#" className="hover:text-primary transition-colors">Security Info</a></li>
+                      <li><a href="#" className="hover:text-primary transition-colors">Cookie Policy</a></li>
                   </ul>
               </div>
 
               <div className="space-y-6">
-                  <h4 className="text-white font-bold text-xl">Company</h4>
-                  <ul className="space-y-4 text-slate-400 text-lg">
-                      <li><a href="#" className="hover:text-indigo-400 transition-colors">About Us</a></li>
-                      <li><a href="#" className="hover:text-indigo-400 transition-colors">Contact Support</a></li>
-                      <li><a href="#" className="hover:text-indigo-400 transition-colors">API Access</a></li>
-                      <li><a href="#" className="hover:text-indigo-400 transition-colors">Help Center</a></li>
+                  <h4 className="text-foreground font-bold text-xl">Company</h4>
+                  <ul className="space-y-4 text-muted-foreground text-lg">
+                      <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
+                      <li><a href="#" className="hover:text-primary transition-colors">Contact Support</a></li>
+                      <li><a href="#" className="hover:text-primary transition-colors">API Access</a></li>
+                      <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
                   </ul>
               </div>
           </div>
-          <div className="max-w-7xl mx-auto mt-24 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-500 text-sm">
+          <div className="max-w-7xl mx-auto mt-24 pt-10 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6 text-muted-foreground text-sm">
              <p>© 2026 Docorio Global. All rights reserved.</p>
              <div className="flex gap-8">
-                 <Link href="/merge" className="hover:text-white">Merge</Link>
-                 <Link href="/split" className="hover:text-white">Split</Link>
-                 <Link href="/convert" className="hover:text-white">Convert</Link>
+                 <Link href="/merge" className="hover:text-foreground">Merge</Link>
+                 <Link href="/split" className="hover:text-foreground">Split</Link>
+                 <Link href="/convert" className="hover:text-foreground">Convert</Link>
              </div>
           </div>
       </footer>
@@ -384,7 +384,7 @@ function DetailedFeature({ title, description, icon: Icon, link, children, align
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
-                    className="flex-1 w-full bg-slate-900 border border-white/5 rounded-[4rem] overflow-hidden aspect-square relative shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)]"
+                    className="flex-1 w-full bg-card border border-border rounded-[4rem] overflow-hidden aspect-square relative shadow-2xl"
                 >
                     {children}
                 </motion.div>
@@ -394,11 +394,11 @@ function DetailedFeature({ title, description, icon: Icon, link, children, align
                     viewport={{ once: true }}
                     className="flex-1 space-y-10"
                 >
-                    <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20 shadow-2xl">
+                    <div className="w-16 h-16 rounded-[1.25rem] bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-2xl">
                         <Icon size={32} />
                     </div>
-                    <h2 className="text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9]">{title}</h2>
-                    <p className="text-slate-400 text-xl md:text-2xl leading-relaxed font-medium">
+                    <h2 className="text-5xl md:text-7xl font-black italic tracking-tighter leading-[0.9] text-foreground">{title}</h2>
+                    <p className="text-muted-foreground text-xl md:text-2xl leading-relaxed font-medium">
                         {description}
                     </p>
                     <Link href={link}>
@@ -425,15 +425,15 @@ function OCRMockup() {
                     <div className="h-5 bg-slate-200 rounded-lg w-full" />
                     <div className="h-40 border-4 border-dashed border-slate-200 rounded-[2rem] bg-slate-50 flex items-center justify-center relative shadow-inner">
                          <motion.div 
-                           className="absolute top-0 left-0 w-full h-2 bg-indigo-500 shadow-[0_0_30px_#6366f1]"
+                           className="absolute top-0 left-0 w-full h-2 bg-primary shadow-[0_0_30px_var(--color-primary)]"
                            animate={{ top: ['0%', '100%', '0%'] }}
                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                          />
                          <ImageIcon className="text-slate-300" size={64} />
                     </div>
                     <div className="space-y-4">
-                        <div className="h-3 bg-indigo-100 rounded-lg w-full" />
-                        <div className="h-3 bg-indigo-100 rounded-lg w-2/3" />
+                        <div className="h-3 bg-primary/20 rounded-lg w-full" />
+                        <div className="h-3 bg-primary/20 rounded-lg w-2/3" />
                     </div>
                 </div>
             </div>
@@ -450,7 +450,7 @@ function SignMockup() {
                     <div className="h-4 bg-slate-100 rounded-lg w-3/4" />
                 </div>
                 <div className="h-48 border-b-4 border-slate-200 relative">
-                    <motion.svg className="absolute inset-0 w-full h-full text-indigo-600" viewBox="0 0 100 50">
+                    <motion.svg className="absolute inset-0 w-full h-full text-primary" viewBox="0 0 100 50">
                         <motion.path
                             d="M10,25 C20,10 40,40 50,25 C60,10 80,40 90,25"
                             stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round"
