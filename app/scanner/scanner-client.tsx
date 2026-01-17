@@ -1,61 +1,109 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { FileUploader } from "@/components/file-uploader"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
 import { SiteHeader } from "@/components/site-header"
-import { Scan, Type, Copy, Check, Download, Loader2, Sparkles, RefreshCw } from "lucide-react"
+import { Scan, Type, Copy, Check, Download, Loader2, Sparkles, RefreshCw, Sliders, Play, Pause, Languages, Image as ImageIcon } from "lucide-react"
 import { createWorker } from "tesseract.js"
+
+// Language Options
+const LANGUAGES = [
+    { code: 'eng', name: 'English' },
+    { code: 'spa', name: 'Spanish' },
+    { code: 'fra', name: 'French' },
+    { code: 'deu', name: 'German' },
+    { code: 'ita', name: 'Italian' },
+    { code: 'por', name: 'Portuguese' },
+]
 
 export default function ScannerClient() {
   const [file, setFile] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string>("")
+  const [processedPreview, setProcessedPreview] = useState<string>("")
   const [text, setText] = useState("")
   const [isScanning, setIsScanning] = useState(false)
   const [progress, setProgress] = useState(0)
   const [progressStatus, setProgressStatus] = useState("")
   const [copied, setCopied] = useState(false)
+  
+  // Editor State
+  const [brightness, setBrightness] = useState(100)
+  const [contrast, setContrast] = useState(100)
+  const [grayscale, setGrayscale] = useState(false)
+  const [language, setLanguage] = useState('eng')
 
+  // Speech State
+  const [isSpeaking, setIsSpeaking] = useState(false)
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  // 1. Handle File Selection & Initial Preview
   useEffect(() => {
     if (file) {
-      const url = URL.createObjectURL(file)
-      setPreview(url)
-      return () => URL.revokeObjectURL(url)
+      applyFilters()
     } else {
-        setPreview("")
+        setProcessedPreview("")
+        setText("")
     }
-  }, [file])
+  }, [file, brightness, contrast, grayscale])
 
+  // 2. Apply Image Filters (Brightness, Contrast, B/W)
+  const applyFilters = () => {
+      if (!file) return
+      
+      const img = new Image()
+      img.src = URL.createObjectURL(file)
+      img.onload = () => {
+          const canvas = canvasRef.current
+          if (!canvas) return
+          
+          // Set canvas dimensions to match image
+          canvas.width = img.width
+          canvas.height = img.height
+          const ctx = canvas.getContext('2d')
+          if (!ctx) return
+
+          // Apply CSS-like filters
+          ctx.filter = `brightness(${brightness}%) contrast(${contrast}%) ${grayscale ? 'grayscale(100%)' : 'grayscale(0%)'}`
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+          
+          setProcessedPreview(canvas.toDataURL('image/jpeg', 0.9))
+      }
+  }
+
+  // 3. Handle Scan (OCR)
   const handleScan = async () => {
-    if (!file) return
+    if (!processedPreview) return
     setIsScanning(true)
     setText("")
     setProgress(0)
+    
     try {
-      const worker = await createWorker('eng', 1, {
+      const worker = await createWorker(language, 1, {
         logger: (m: any) => {
             if (m.status === 'recognizing text') {
                 setProgress(m.progress)
-                setProgressStatus(`Recognizing... ${Math.floor(m.progress * 100)}%`)
+                setProgressStatus(`Scanning... ${Math.floor(m.progress * 100)}%`)
             } else {
                 setProgressStatus(m.status)
             }
         }
       });
-      const { data: { text } } = await worker.recognize(file);
+      
+      const { data: { text } } = await worker.recognize(processedPreview);
       setText(text);
       await worker.terminate();
     } catch (err) {
       console.error(err)
-      setText("Error: Could not scan text. Please try a clearer image.")
+      setText("Error: Could not scan text. Please ensure the image is clear.")
     } finally {
       setIsScanning(false)
       setProgress(0)
     }
   }
 
+  // 4. Utilities
   const handleCopy = () => {
       navigator.clipboard.writeText(text)
       setCopied(true)
@@ -67,121 +115,205 @@ export default function ScannerClient() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `scanned-text-${Date.now()}.txt`
+      a.download = `scan-result-${Date.now()}.txt`
       a.click()
   }
 
+  const handleSpeak = () => {
+      if (isSpeaking) {
+          window.speechSynthesis.cancel()
+          setIsSpeaking(false)
+          return
+      }
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.onend = () => setIsSpeaking(false)
+      window.speechSynthesis.speak(utterance)
+      setIsSpeaking(true)
+  }
+
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans">
+    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-pink-500/30">
         <SiteHeader />
         
-        <div className="pt-24 pb-20 px-6 max-w-6xl mx-auto min-h-screen flex flex-col">
-            <div className="text-center mb-10 space-y-2">
-                <h1 className="text-3xl lg:text-5xl font-black tracking-tight flex items-center justify-center gap-3">
-                    <Scan className="text-pink-600" size={40} />
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-500">Text Scanner</span>
+        {/* Hidden Canvas for Processing */}
+        <canvas ref={canvasRef} className="hidden" />
+
+        <div className="pt-24 pb-20 px-6 max-w-7xl mx-auto min-h-screen flex flex-col">
+            <div className="text-center mb-10 space-y-4">
+                <h1 className="text-4xl lg:text-6xl font-black tracking-tight flex items-center justify-center gap-4">
+                    <Scan className="text-pink-600" size={48} />
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-rose-500">Pro Vision Scanner</span>
                 </h1>
-                <p className="text-muted-foreground font-medium max-w-2xl mx-auto">
-                     Copy text from your photos and scans quickly using our smart AI tool.
+                <p className="text-xl text-muted-foreground font-medium max-w-2xl mx-auto">
+                    Enhance, scan, and extract text from images with AI-powered OCR.
                 </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8 items-start">
-                 <div className="space-y-6">
-                    <Card className="p-8 shadow-sm border-border bg-card relative overflow-hidden group">
-                         {!file ? (
-                            <div className="py-12 border-2 border-dashed border-muted-foreground/20 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
-                                <FileUploader onFileSelect={(files) => setFile(files[0])} accept="image/*" />
-                                <p className="text-center mt-6 text-muted-foreground text-sm font-medium">Supports JPG, PNG, WEBP</p>
-                            </div>
-                         ) : (
-                            <div className="space-y-6">
-                                <div className="relative aspect-video rounded-xl overflow-hidden border border-border bg-muted/50 group-hover:border-pink-500/50 transition-colors">
-                                    <img src={preview} alt="Preview" className="w-full h-full object-contain" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                                         <span className="text-xs font-medium text-white truncate">{file.name}</span>
-                                    </div>
+            <div className="grid lg:grid-cols-12 gap-8 items-start">
+                 
+                 {/* LEFT: IMAGE STUDIO */}
+                 <div className="lg:col-span-5 space-y-6">
+                    <Card className="p-1 bg-muted/50 border-white/10 overflow-hidden rounded-3xl backdrop-blur-md">
+                         <div className="p-6 md:p-8 bg-card border-white/5 rounded-[1.4rem] space-y-6">
+                             {!file ? (
+                                <div className="py-16 border-2 border-dashed border-muted-foreground/20 rounded-2xl bg-muted/30 hover:bg-muted/50 transition-colors group cursor-pointer">
+                                    <FileUploader onFileSelect={(files) => setFile(files[0])} accept="image/*" />
+                                    <p className="text-center mt-6 text-muted-foreground font-medium group-hover:text-pink-500 transition-colors">Drop image here to start</p>
                                 </div>
-                                <div className="flex gap-4">
-                                    <Button 
-                                        onClick={handleScan} 
-                                        disabled={isScanning}
-                                        className="flex-1 h-12 bg-pink-600 hover:bg-pink-700 text-white font-bold text-lg shadow-lg disabled:opacity-50"
-                                    >
-                                        {isScanning ? <Loader2 className="mr-2 animate-spin" /> : <Sparkles className="mr-2" />}
-                                        {isScanning ? "Scanning..." : "Start Scanning"}
-                                    </Button>
-                                    <Button 
-                                        variant="outline" 
-                                        onClick={() => setFile(null)}
-                                        className="h-12 border-border hover:bg-muted text-muted-foreground hover:text-foreground"
-                                    >
-                                        <RefreshCw className="mr-2" size={18} /> Reselect
-                                    </Button>
-                                </div>
-                                {isScanning && (
-                                    <div className="space-y-2">
-                                        <div className="flex justify-between text-xs font-bold text-pink-600 uppercase tracking-widest">
-                                            <span>{progressStatus}</span>
-                                            <span>{Math.floor(progress * 100)}%</span>
-                                        </div>
-                                        <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                                            <div 
-                                                className="h-full bg-gradient-to-r from-pink-500 to-rose-500 transition-all duration-300" 
-                                                style={{ width: `${progress * 100}%` }}
-                                            />
+                             ) : (
+                                <>
+                                    {/* Preview Area */}
+                                    <div className="relative aspect-video rounded-2xl overflow-hidden border border-border bg-black group shadow-2xl">
+                                        <img src={processedPreview} alt="Processing" className="w-full h-full object-contain" />
+                                        
+                                        {/* Overlay Controls */}
+                                        <div className="absolute top-2 right-2 flex gap-2">
+                                            <button 
+                                                onClick={() => { setFile(null); setProcessedPreview(""); setText(""); }}
+                                                className="p-2 bg-black/60 hover:bg-red-500/80 text-white rounded-xl backdrop-blur-md transition-all"
+                                                title="Remove Image"
+                                            >
+                                                <RefreshCw size={16} />
+                                            </button>
                                         </div>
                                     </div>
-                                )}
-                            </div>
-                         )}
+
+                                    {/* Filters & Enhancements */}
+                                    <div className="space-y-6 pt-4">
+                                        <div className="flex items-center gap-2 text-pink-500 font-bold uppercase text-xs tracking-wider">
+                                            <Sliders size={14} /> Image Enhancement
+                                        </div>
+                                        
+                                        <div className="grid grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                                                    <span>Brightness</span>
+                                                    <span>{brightness}%</span>
+                                                </div>
+                                                <input 
+                                                    type="range" min="50" max="150" value={brightness} 
+                                                    onChange={(e) => setBrightness(Number(e.target.value))}
+                                                    className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-pink-500"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                                                    <span>Contrast</span>
+                                                    <span>{contrast}%</span>
+                                                </div>
+                                                <input 
+                                                    type="range" min="50" max="150" value={contrast} 
+                                                    onChange={(e) => setContrast(Number(e.target.value))}
+                                                    className="w-full h-2 bg-muted rounded-full appearance-none cursor-pointer accent-pink-500"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border border-white/5">
+                                            <span className="text-sm font-bold text-muted-foreground">B&W Mode (Best for Docs)</span>
+                                            <button 
+                                                onClick={() => setGrayscale(!grayscale)}
+                                                className={`w-12 h-6 rounded-full transition-colors relative ${grayscale ? 'bg-pink-600' : 'bg-muted-foreground/30'}`}
+                                            >
+                                                <span className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${grayscale ? 'translate-x-6' : 'translate-x-0'}`} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="h-px bg-border/50" />
+
+                                    {/* Scan Controls */}
+                                    <div className="space-y-4">
+                                        <div className="flex gap-4">
+                                            <div className="relative flex-1">
+                                                <select 
+                                                    className="w-full h-12 pl-10 pr-4 bg-background border border-border rounded-xl text-sm font-bold appearance-none focus:ring-2 focus:ring-pink-500 outline-none"
+                                                    value={language}
+                                                    onChange={(e) => setLanguage(e.target.value)}
+                                                >
+                                                    {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.name}</option>)}
+                                                </select>
+                                                <Languages className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                                            </div>
+                                            <Button 
+                                                onClick={handleScan} 
+                                                disabled={isScanning}
+                                                className="flex-[2] h-12 bg-pink-600 hover:bg-pink-700 text-white font-bold text-lg rounded-xl shadow-lg shadow-pink-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                            >
+                                                {isScanning ? <Loader2 className="mr-2 animate-spin" /> : <Scan className="mr-2" />}
+                                                {isScanning ? "Scanning..." : "extract Text"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </>
+                             )}
+                         </div>
                     </Card>
                  </div>
 
-                 <div className="space-y-6 h-full">
-                     <Card className="h-full min-h-[450px] p-8 shadow-sm border-border bg-card flex flex-col">
-                        <div className="flex items-center justify-between mb-6">
-                             <div className="flex items-center gap-2">
-                                <Type className="text-pink-600" size={18} />
-                                <h3 className="font-bold text-foreground">Extracted Text</h3>
+                 {/* RIGHT: RESULTS */}
+                 <div className="lg:col-span-7 h-full">
+                     <Card className="h-full min-h-[600px] p-8 bg-card border-none shadow-2xl rounded-[2.5rem] flex flex-col relative overflow-hidden">
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-8 z-10">
+                             <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-500">
+                                    <Type size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-lg">Extracted Content</h3>
+                                    <p className="text-xs text-muted-foreground font-medium">Editable Text Output</p>
+                                </div>
                              </div>
                              {text && (
                                  <div className="flex gap-2">
-                                    <button 
-                                        onClick={handleCopy}
-                                        className="p-2 rounded-lg bg-muted hover:bg-pink-50 text-muted-foreground hover:text-pink-600 transition-colors"
-                                        title="Copy Text"
-                                    >
+                                     <button onClick={handleSpeak} className={`p-2.5 rounded-xl transition-all ${isSpeaking ? 'bg-pink-100 text-pink-600 animate-pulse' : 'bg-muted hover:bg-pink-50 text-muted-foreground hover:text-pink-600'}`} title="Read Aloud">
+                                         {isSpeaking ? <Pause size={18} /> : <Play size={18} />}
+                                     </button>
+                                    <button onClick={handleCopy} className="p-2.5 rounded-xl bg-muted hover:bg-pink-50 text-muted-foreground hover:text-pink-600 transition-colors" title="Copy">
                                         {copied ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
                                     </button>
-                                    <button 
-                                        onClick={handleDownload}
-                                        className="p-2 rounded-lg bg-muted hover:bg-pink-50 text-muted-foreground hover:text-pink-600 transition-colors"
-                                        title="Download TXT"
-                                    >
+                                    <button onClick={handleDownload} className="p-2.5 rounded-xl bg-muted hover:bg-pink-50 text-muted-foreground hover:text-pink-600 transition-colors" title="Download">
                                         <Download size={18} />
                                     </button>
                                  </div>
                              )}
                         </div>
-                        {/* Formatted Text Display */}
-                        <div className="flex-1 bg-muted/30 border border-border rounded-xl p-6 relative overflow-hidden">
-                            <div className="absolute inset-0 overflow-auto custom-scrollbar p-6">
-                                {text ? (
-                                    <p className="text-foreground leading-7 font-sans whitespace-pre-wrap text-sm">
-                                        {text}
-                                    </p>
-                                ) : (
-                                    <span className="text-muted-foreground/60 italic">Extracted text will appear here...</span>
-                                )}
-                            </div>
+
+                        {/* Text Area */}
+                        <div className="flex-1 bg-muted/30 border border-white/5 rounded-2xl p-6 relative overflow-hidden group/text z-10">
+                            <textarea 
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                className="w-full h-full bg-transparent border-none resize-none focus:outline-none text-foreground leading-7 font-mono text-sm custom-scrollbar"
+                                placeholder={isScanning ? "Analyzing image patterns..." : "Extracted text will appear here. You can edit this text directly."}
+                                spellCheck={false}
+                            />
+                            
+                            {/* Scanning Overlay Effect */}
+                            {isScanning && (
+                                <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex flex-col items-center justify-center p-8 space-y-6">
+                                     <div className="relative w-24 h-24">
+                                         <div className="absolute inset-0 border-4 border-pink-500/30 rounded-full animate-ping" />
+                                         <div className="absolute inset-0 border-4 border-pink-500 rounded-full animate-spin border-t-transparent" />
+                                         <Scan className="absolute inset-0 m-auto text-pink-500 animate-pulse" size={32} />
+                                     </div>
+                                     <div className="space-y-2 text-center w-full max-w-xs">
+                                         <p className="text-pink-500 font-bold uppercase tracking-widest text-xs animate-pulse">{progressStatus}</p>
+                                         <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                                             <div className="h-full bg-pink-500 transition-all duration-300" style={{ width: `${progress * 100}%` }} />
+                                         </div>
+                                     </div>
+                                </div>
+                            )}
+
+                            {!text && !isScanning && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-30 pointer-events-none">
+                                     <ImageIcon size={64} className="mb-4 text-muted-foreground" />
+                                     <p className="font-medium text-lg">Waiting for scan...</p>
+                                </div>
+                            )}
                         </div>
-                        {!text && !isScanning && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center pointer-events-none opacity-20">
-                                 <Type size={48} className="mb-4 text-muted-foreground" />
-                                 <p className="text-sm text-muted-foreground">Upload an image and click scan to see the results here.</p>
-                            </div>
-                        )}
                      </Card>
                  </div>
             </div>

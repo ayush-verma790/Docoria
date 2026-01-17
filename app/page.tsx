@@ -33,6 +33,26 @@ export default function LandingPage() {
     mouseY.set(clientY - top)
   }
 
+  // Staggered Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { type: "spring" as const, stiffness: 50 } 
+    }
+  }
+
   return (
     <div 
       ref={containerRef}
@@ -304,7 +324,13 @@ export default function LandingPage() {
                              <h3 className="text-2xl font-bold text-foreground tracking-tight">Conversion Tools</h3>
                         </div>
                         
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <motion.div 
+                            variants={containerVariants}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, margin: "-100px" }}
+                            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+                        >
                             {[
                                 { name: "PDF to Word", href: "/convert?to=word", icon: FileText, desc: "Convert PDF to editable Docx" },
                                 { name: "PDF to Excel", href: "/convert?to=excel", icon: Table, desc: "Extract tables from PDF" },
@@ -316,24 +342,27 @@ export default function LandingPage() {
                                 { name: "JPG to PDF", href: "/image-to-pdf", icon: ImageIcon, desc: "Images to single PDF" },
                                 { name: "HTML to PDF", href: "/html-to-pdf", icon: Globe, desc: "Webpages to PDF" },
                             ].map((tool) => (
-                                <Link key={tool.name} href={tool.href} className="group relative flex flex-col justify-between p-6 h-48 rounded-[2rem] bg-card border border-border/50 hover:border-indigo-500/30 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <motion.div key={tool.name} variants={itemVariants}>
+                                <Link href={tool.href} className="group relative flex flex-col p-6 h-56 rounded-3xl bg-card/40 backdrop-blur-md border border-white/10 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(99,102,241,0.3)] hover:border-indigo-500/50">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                     
-                                    <div className="w-12 h-12 rounded-2xl bg-muted/50 dark:bg-white/5 flex items-center justify-center text-muted-foreground group-hover:text-indigo-500 dark:group-hover:text-indigo-400 group-hover:bg-indigo-500/20 transition-all duration-300">
-                                        <tool.icon size={24} />
+                                    <div className="mb-auto flex justify-between items-start">
+                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 flex items-center justify-center text-indigo-500 border border-indigo-500/20 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-transparent transition-all duration-500 shadow-sm relative z-10">
+                                            <tool.icon size={26} strokeWidth={1.5} />
+                                        </div>
+                                        <div className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 delay-100">
+                                             <ArrowRight size={20} className="text-indigo-400" />
+                                        </div>
                                     </div>
-
-                                    <div className="relative z-10">
-                                        <h4 className="font-bold text-foreground text-lg mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">{tool.name}</h4>
-                                        <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">{tool.desc}</p>
-                                    </div>
-
-                                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                                        <ArrowRight size={16} className="text-indigo-500 dark:text-indigo-400" />
+                                    
+                                    <div className="relative z-10 mt-6">
+                                        <h4 className="font-exchanged text-xl font-bold text-foreground mb-2 group-hover:text-indigo-400 transition-colors tracking-tight">{tool.name}</h4>
+                                        <p className="text-sm text-muted-foreground/80 group-hover:text-muted-foreground transition-colors font-medium leading-relaxed">{tool.desc}</p>
                                     </div>
                                 </Link>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
 
                     {/* Category: Modification & Organization */}
@@ -345,37 +374,46 @@ export default function LandingPage() {
                              <h3 className="text-2xl font-bold text-foreground tracking-tight">Modification & Organization</h3>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <motion.div 
+                             variants={containerVariants}
+                             initial="hidden"
+                             whileInView="visible"
+                             viewport={{ once: true, margin: "-100px" }}
+                             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+                        >
                             {[
                                 { name: "Merge PDF", href: "/merge", icon: Layers, desc: "Combine multiple files" },
                                 { name: "Split PDF", href: "/split", icon: Scissors, desc: "Extract specific pages" },
                                 { name: "Compress PDF", href: "/compress", icon: Zap, desc: "Reduce file size" },
                                 { name: "Organize", href: "/organize", icon: Layers, desc: "Sort & delete pages" },
-                                { name: "Rotate PDF", href: "/organize", icon: RefreshCw, desc: "Fix page orientation" },
+                                { name: "Rotate PDF", href: "/rotate", icon: RefreshCw, desc: "Fix page orientation" },
                                 { name: "Page Numbers", href: "/page-numbers", icon: FileText, desc: "Add numbering to pages" },
                                 { name: "Resize PDF", href: "/resize", icon: Scan, desc: "Change page dimensions" },
                                 { name: "Repair PDF", href: "/repair", icon:  Wrench, desc: "Fix corrupted files" },
                                 { name: "Flatten PDF", href: "/flatten", icon: Layers, desc: "Lock form fields" },
-                                { name: "Crop PDF", href: "/edit", icon: Scissors, desc: "Trim page margins" },
+                                { name: "Crop PDF", href: "/crop", icon: Crop, desc: "Trim page margins" },
                             ].map((tool) => (
-                                <Link key={tool.name} href={tool.href} className="group relative flex flex-col justify-between p-6 h-48 rounded-[2rem] bg-card border border-border/50 hover:border-cyan-500/30 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <motion.div key={tool.name} variants={itemVariants}>
+                                <Link href={tool.href} className="group relative flex flex-col p-6 h-56 rounded-3xl bg-card/40 backdrop-blur-md border border-white/10 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.3)] hover:border-cyan-500/50">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                     
-                                    <div className="w-12 h-12 rounded-2xl bg-muted/50 dark:bg-white/5 flex items-center justify-center text-muted-foreground group-hover:text-cyan-500 dark:group-hover:text-cyan-400 group-hover:bg-cyan-500/20 transition-all duration-300">
-                                        <tool.icon size={24} />
+                                    <div className="mb-auto flex justify-between items-start">
+                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 flex items-center justify-center text-cyan-500 border border-cyan-500/20 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white group-hover:border-transparent transition-all duration-500 shadow-sm relative z-10">
+                                            <tool.icon size={26} strokeWidth={1.5} />
+                                        </div>
+                                        <div className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 delay-100">
+                                             <ArrowRight size={20} className="text-cyan-400" />
+                                        </div>
                                     </div>
-
-                                    <div className="relative z-10">
-                                        <h4 className="font-bold text-foreground text-lg mb-1 group-hover:text-cyan-600 dark:group-hover:text-cyan-200 transition-colors">{tool.name}</h4>
-                                        <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">{tool.desc}</p>
-                                    </div>
-
-                                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                                        <ArrowRight size={16} className="text-cyan-500 dark:text-cyan-400" />
+                                    
+                                    <div className="relative z-10 mt-6">
+                                        <h4 className="font-exchanged text-xl font-bold text-foreground mb-2 group-hover:text-cyan-400 transition-colors tracking-tight">{tool.name}</h4>
+                                        <p className="text-sm text-muted-foreground/80 group-hover:text-muted-foreground transition-colors font-medium leading-relaxed">{tool.desc}</p>
                                     </div>
                                 </Link>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
 
                     {/* Category: Security & AI */}
@@ -387,7 +425,13 @@ export default function LandingPage() {
                              <h3 className="text-2xl font-bold text-foreground tracking-tight">Security & AI Tools</h3>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <motion.div 
+                             variants={containerVariants}
+                             initial="hidden"
+                             whileInView="visible"
+                             viewport={{ once: true, margin: "-100px" }}
+                             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+                        >
                             {[
                                 { name: "Chat PDF", href: "/chat-pdf", icon: MessageSquare, desc: "AI Powered Assistant" },
                                 { name: "Summarizer", href: "/summarizer", icon: Sparkles, desc: "Get quick insights" },
@@ -399,24 +443,27 @@ export default function LandingPage() {
                                 { name: "Scanner", href: "/scanner", icon: Smartphone, desc: "Scan physical docs" },
                                 { name: "QR Code", href: "/qrcode", icon: Scan, desc: "Generate codes" },
                             ].map((tool) => (
-                                <Link key={tool.name} href={tool.href} className="group relative flex flex-col justify-between p-6 h-48 rounded-[2rem] bg-card border border-border/50 hover:border-purple-500/30 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <motion.div key={tool.name} variants={itemVariants}>
+                                <Link href={tool.href} className="group relative flex flex-col p-6 h-56 rounded-3xl bg-card/40 backdrop-blur-md border border-white/10 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(168,85,247,0.3)] hover:border-purple-500/50">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                     
-                                    <div className="w-12 h-12 rounded-2xl bg-muted/50 dark:bg-white/5 flex items-center justify-center text-muted-foreground group-hover:text-purple-500 dark:group-hover:text-purple-400 group-hover:bg-purple-500/20 transition-all duration-300">
-                                        <tool.icon size={24} />
+                                    <div className="mb-auto flex justify-between items-start">
+                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 flex items-center justify-center text-purple-500 border border-purple-500/20 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white group-hover:border-transparent transition-all duration-500 shadow-sm relative z-10">
+                                            <tool.icon size={26} strokeWidth={1.5} />
+                                        </div>
+                                        <div className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 delay-100">
+                                             <ArrowRight size={20} className="text-purple-400" />
+                                        </div>
                                     </div>
-
-                                    <div className="relative z-10">
-                                        <h4 className="font-bold text-foreground text-lg mb-1 group-hover:text-purple-600 dark:group-hover:text-purple-300 transition-colors">{tool.name}</h4>
-                                        <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">{tool.desc}</p>
-                                    </div>
-
-                                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                                        <ArrowRight size={16} className="text-purple-500 dark:text-purple-400" />
+                                    
+                                    <div className="relative z-10 mt-6">
+                                        <h4 className="font-exchanged text-xl font-bold text-foreground mb-2 group-hover:text-purple-400 transition-colors tracking-tight">{tool.name}</h4>
+                                        <p className="text-sm text-muted-foreground/80 group-hover:text-muted-foreground transition-colors font-medium leading-relaxed">{tool.desc}</p>
                                     </div>
                                 </Link>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
 
                     {/* Category: Image Studio (New) */}
@@ -428,7 +475,13 @@ export default function LandingPage() {
                              <h3 className="text-2xl font-bold text-foreground tracking-tight">Image Studio</h3>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <motion.div 
+                             variants={containerVariants}
+                             initial="hidden"
+                             whileInView="visible"
+                             viewport={{ once: true, margin: "-100px" }}
+                             className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+                        >
                             {[
                                 { name: "Remove BG", href: "/image-tools/bg-remover", icon: Eraser, desc: "Remove backgrounds instantly" },
                                 { name: "Passport Photo", href: "/image-tools/passport", icon: User, desc: "Create mostly compliant IDs" },
@@ -443,24 +496,27 @@ export default function LandingPage() {
                                 { name: "Blur Image", href: "/image-tools/blur", icon: Palette, desc: "Blur sensitive details" },
                                 { name: "Convert Format", href: "/convert", icon: RefreshCw, desc: "JPG, PNG, WEBP, AVIF" },
                             ].map((tool) => (
-                                <Link key={tool.name} href={tool.href} className="group relative flex flex-col justify-between p-6 h-48 rounded-[2rem] bg-card border border-border/50 hover:border-pink-500/30 overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <motion.div key={tool.name} variants={itemVariants}>
+                                <Link href={tool.href} className="group relative flex flex-col p-6 h-56 rounded-3xl bg-card/40 backdrop-blur-md border border-white/10 overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(236,72,153,0.3)] hover:border-pink-500/50">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                     
-                                    <div className="w-12 h-12 rounded-2xl bg-muted/50 dark:bg-white/5 flex items-center justify-center text-muted-foreground group-hover:text-pink-500 dark:group-hover:text-pink-400 group-hover:bg-pink-500/20 transition-all duration-300">
-                                        <tool.icon size={24} />
+                                    <div className="mb-auto flex justify-between items-start">
+                                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500/10 to-rose-500/10 flex items-center justify-center text-pink-500 border border-pink-500/20 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white group-hover:border-transparent transition-all duration-500 shadow-sm relative z-10">
+                                            <tool.icon size={26} strokeWidth={1.5} />
+                                        </div>
+                                        <div className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 delay-100">
+                                             <ArrowRight size={20} className="text-pink-400" />
+                                        </div>
                                     </div>
-
-                                    <div className="relative z-10">
-                                        <h4 className="font-bold text-foreground text-lg mb-1 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors">{tool.name}</h4>
-                                        <p className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">{tool.desc}</p>
-                                    </div>
-
-                                    <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0">
-                                        <ArrowRight size={16} className="text-pink-500 dark:text-pink-400" />
+                                    
+                                    <div className="relative z-10 mt-6">
+                                        <h4 className="font-exchanged text-xl font-bold text-foreground mb-2 group-hover:text-pink-400 transition-colors tracking-tight">{tool.name}</h4>
+                                        <p className="text-sm text-muted-foreground/80 group-hover:text-muted-foreground transition-colors font-medium leading-relaxed">{tool.desc}</p>
                                     </div>
                                 </Link>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
 
                 </div>

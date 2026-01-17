@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Document, Page, pdfjs } from "react-pdf"
+import { PDFDocument, degrees } from "pdf-lib"
 import "react-pdf/dist/Page/TextLayer.css"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -9,7 +10,7 @@ import { Loader2, Download, ArrowLeft, RotateCw, Trash2, GripVertical, Sparkles,
 import { FileUploader } from "@/components/file-uploader"
 import { cn } from "@/lib/utils"
 
-export default function OrganizeClient() {
+export default function OrganizeClient({ title = "Organize Studio" }: { title?: string }) {
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number>(0)
   const [pageOrder, setPageOrder] = useState<number[]>([])
@@ -70,26 +71,32 @@ export default function OrganizeClient() {
     if (!file) return
     setIsProcessing(true)
     setError("")
+    
     try {
-      const formData = new FormData()
-      formData.append("file", file)
-      formData.append("pageOrder", JSON.stringify(pageOrder))
-      formData.append("rotations", JSON.stringify(rotations))
-      formData.append("signature", "placeholder")
-      formData.append("positions", JSON.stringify([]))
-      formData.append("textEdits", JSON.stringify([]))
-      const res = await fetch("/api/sign", {
-        method: "POST",
-        body: formData,
-      })
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error)
+      const arrayBuffer = await file.arrayBuffer()
+      const srcDoc = await PDFDocument.load(arrayBuffer)
+      const newDoc = await PDFDocument.create()
+      
+      for (const originalPageNum of pageOrder) {
+          // originalPageNum is 1-based, pdf-lib is 0-based
+          const [copiedPage] = await newDoc.copyPages(srcDoc, [originalPageNum - 1])
+          
+          const userRotation = rotations[originalPageNum] || 0
+          const existingRotation = copiedPage.getRotation().angle
+          copiedPage.setRotation(degrees((existingRotation + userRotation) % 360))
+          
+          newDoc.addPage(copiedPage)
       }
-      const data = await res.json()
-      setResult(data)
+      
+      const pdfBytes = await newDoc.save()
+      const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
+      const url = URL.createObjectURL(blob)
+      
+      setResult({ downloadUrl: url })
+      
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Processing failed")
+      console.error(err)
+      setError("Failed to process PDF. Please try again.")
     } finally {
       setIsProcessing(false)
     }
@@ -121,7 +128,7 @@ export default function OrganizeClient() {
                   </div>
                   <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
                   <div className="min-w-0 hidden sm:block">
-                    <h1 className="text-lg font-bold text-white truncate leading-tight">Organize Pages</h1>
+                    <h1 className="text-lg font-bold text-white truncate leading-tight">{title}</h1>
                     <p className="text-xs text-muted-foreground truncate">Reorder, rotate, and manage your PDF</p>
                   </div>
                 </div>

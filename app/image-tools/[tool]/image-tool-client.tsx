@@ -26,7 +26,15 @@ export default function ImageToolClient({ tool }: { tool: string }) {
     const [file, setFile] = useState<File | null>(null)
     const [processedImage, setProcessedImage] = useState<string | null>(null)
     const [isProcessing, setIsProcessing] = useState(false)
-    const [settings, setSettings] = useState({ blur: 0, width: 100, height: 100, saturation: 100 })
+    const [settings, setSettings] = useState({ 
+        blur: 5, 
+        width: 100, 
+        height: 100, 
+        watermarkText: "Confidential",
+        compressionQuality: 0.8,
+        idName: "John Doe",
+        bgThreshold: 240
+    })
     
     // Canvas refs
     const originalImageRef = useRef<HTMLImageElement>(null)
@@ -36,11 +44,13 @@ export default function ImageToolClient({ tool }: { tool: string }) {
         if (files.length > 0) {
             setFile(files[0])
             setProcessedImage(null)
-            // Load image to get dims
+            
+            // Immediately load dimensions
             const img = new Image()
-            img.src = URL.createObjectURL(files[0])
+            const objectUrl = URL.createObjectURL(files[0])
+            img.src = objectUrl
             img.onload = () => {
-               setSettings(s => ({ ...s, width: img.width, height: img.height }))
+               setSettings(s => ({ ...s, width: img.naturalWidth, height: img.naturalHeight }))
             }
         }
     }
@@ -48,73 +58,135 @@ export default function ImageToolClient({ tool }: { tool: string }) {
     const processImage = async () => {
         if (!file) return
         setIsProcessing(true)
-
-        // Simulate processing delay for "AI" feel
-        await new Promise(r => setTimeout(r, 1500))
+        await new Promise(r => setTimeout(r, 800)) // Slight delay for UX
 
         const canvas = document.createElement("canvas")
         const ctx = canvas.getContext("2d")
+        if (!ctx) return
+        
         const img = new Image()
         img.src = URL.createObjectURL(file)
-        
         await new Promise(r => img.onload = r)
 
         if (tool === "passport") {
-            // Passport Logic: Crop to 3.5:4.5 ratio
+            // Passport Logic (3.5 x 4.5 cm ~ 7:9 ratio)
             const ratio = 3.5 / 4.5
             let w = img.width
             let h = img.height
-            // Center crop
-            if (w / h > ratio) {
-                w = h * ratio
-            } else {
-                h = w / ratio
-            }
-            canvas.width = 350 // High Res standard width
-            canvas.height = 450
+            if (w / h > ratio) { w = h * ratio } else { h = w / ratio }
+            canvas.width = 413 // ~3.5cm at 300dpi
+            canvas.height = 531 // ~4.5cm at 300dpi
             const offsetX = (img.width - w) / 2
             const offsetY = (img.height - h) / 2
-            ctx?.drawImage(img, offsetX, offsetY, w, h, 0, 0, 350, 450)
+            ctx.drawImage(img, offsetX, offsetY, w, h, 0, 0, canvas.width, canvas.height)
+            
         } else if (tool === "profile") {
             // Circle Crop
-            canvas.width = 1000
-            canvas.height = 1000
             const size = Math.min(img.width, img.height)
+            canvas.width = size
+            canvas.height = size
             const offsetX = (img.width - size) / 2
             const offsetY = (img.height - size) / 2
             
-            ctx!.beginPath()
-            ctx!.arc(500, 500, 500, 0, Math.PI * 2)
-            ctx!.clip()
-            ctx?.drawImage(img, offsetX, offsetY, size, size, 0, 0, 1000, 1000)
+            ctx.beginPath()
+            ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2)
+            ctx.clip()
+            ctx.drawImage(img, offsetX, offsetY, size, size, 0, 0, size, size)
+            
         } else if (tool === "blur") {
              canvas.width = img.width
              canvas.height = img.height
-             ctx!.filter = `blur(${settings.blur}px)`
-             ctx?.drawImage(img, 0, 0)
+             ctx.filter = `blur(${settings.blur}px)`
+             ctx.drawImage(img, 0, 0)
+             
         } else if (tool === "resize") {
+             // Explicit Resize
              canvas.width = settings.width
              canvas.height = settings.height
-             ctx?.drawImage(img, 0, 0, settings.width, settings.height)
+             ctx.drawImage(img, 0, 0, settings.width, settings.height)
+             
         } else if (tool === "bg-remover") {
-             // Mock BG Remover - In real app, call API
-             // For demo, we just apply a slight glow/filter to show "processed"
+             // Basic White BG Removal
              canvas.width = img.width
              canvas.height = img.height
-             ctx?.drawImage(img, 0, 0)
-             // We can't actually remove BG client side easily without models
-             // We will simulate it by returning same image but maybe alerting user
-             // For this MVP, we return the image 'as is' but assume the 'AI' did nothing on this complex image :)
-             // Or we could invert colors just to show processing happened? No that's bad.
-             // Let's just pass it through.
+             ctx.drawImage(img, 0, 0)
+             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+             const data = imageData.data
+             const threshold = settings.bgThreshold
+             for (let i = 0; i < data.length; i += 4) {
+                 const r = data[i], g = data[i + 1], b = data[i + 2]
+                 if (r > threshold && g > threshold && b > threshold) {
+                     data[i + 3] = 0 // Transparent
+                 }
+             }
+             ctx.putImageData(imageData, 0, 0)
+             
+        } else if (tool === "id-card") {
+             // Simple ID Card Layout
+             canvas.width = 1000 // Credit Card Ratio ~ 86mm x 54mm -> 1.58
+             canvas.height = 630
+             
+             // Background
+             ctx.fillStyle = "#ffffff"
+             ctx.fillRect(0, 0, canvas.width, canvas.height)
+             ctx.fillStyle = "#f3f4f6" // Header band
+             ctx.fillRect(0, 0, canvas.width, 150)
+             
+             // Photo (Left)
+             const photoSize = 300
+             ctx.save()
+             ctx.beginPath()
+             ctx.roundRect(50, 200, photoSize, photoSize, 20)
+             ctx.clip()
+             // Center crop photo into box
+             const minDim = Math.min(img.width, img.height)
+             ctx.drawImage(img, (img.width - minDim)/2, (img.height - minDim)/2, minDim, minDim, 50, 200, photoSize, photoSize)
+             ctx.restore()
+             
+             // Text
+             ctx.fillStyle = "#111827"
+             ctx.font = "bold 60px sans-serif"
+             ctx.fillText(settings.idName, 400, 300)
+             ctx.fillStyle = "#6b7280"
+             ctx.font = "40px sans-serif"
+             ctx.fillText("ID: " + Math.floor(Math.random()*1000000), 400, 380)
+             ctx.fillStyle = "#3b82f6"
+             ctx.fillText("Employee", 400, 460)
+
+        } else if (tool === "watermark") {
+             canvas.width = img.width
+             canvas.height = img.height
+             ctx.drawImage(img, 0, 0)
+             ctx.fillStyle = "rgba(255, 255, 255, 0.5)"
+             ctx.font = `bold ${img.width / 10}px sans-serif`
+             ctx.textAlign = "center"
+             ctx.textBaseline = "middle"
+             ctx.translate(canvas.width / 2, canvas.height / 2)
+             ctx.rotate(-Math.PI / 4)
+             ctx.fillText(settings.watermarkText, 0, 0)
+             
+        } else if (tool === "crop") {
+             // Center Crop (Square by default for now)
+             const size = Math.min(img.width, img.height)
+             canvas.width = size
+             canvas.height = size
+             ctx.drawImage(img, (img.width - size)/2, (img.height - size)/2, size, size, 0, 0, size, size)
+             
+        } else if (tool === "compress") {
+             canvas.width = img.width
+             canvas.height = img.height
+             ctx.drawImage(img, 0, 0)
+             // Quality applied in export
         } else {
-             // Default pass through
              canvas.width = img.width
              canvas.height = img.height
-             ctx?.drawImage(img, 0, 0)
+             ctx.drawImage(img, 0, 0)
         }
 
-        setProcessedImage(canvas.toDataURL("image/png"))
+        const quality = tool === "compress" ? settings.compressionQuality : 1.0
+        const mimeType = tool === "compress" ? "image/jpeg" : "image/png"
+        
+        setProcessedImage(canvas.toDataURL(mimeType, quality))
         setIsProcessing(false)
     }
 
@@ -144,18 +216,21 @@ export default function ImageToolClient({ tool }: { tool: string }) {
                                   </div>
                                   
                                   {/* Tool Controls */}
-                                  <div className="space-y-4 p-4 bg-muted/30 rounded-xl border border-border">
-                                       <h3 className="font-bold flex items-center gap-2"><Palette size={16} /> Image Settings</h3>
+                                  <div className="space-y-4 p-6 bg-card rounded-2xl border-2 border-primary/20 shadow-lg animate-in slide-in-from-top-4">
+                                       <h3 className="font-bold flex items-center gap-2 text-lg text-primary"><Palette size={20} /> Settings Panel</h3>
                                        
                                        {tool === "resize" && (
-                                           <div className="grid grid-cols-2 gap-4">
-                                               <div>
-                                                   <label className="text-xs font-bold uppercase text-muted-foreground">Width</label>
-                                                   <input type="number" value={settings.width} onChange={(e) => setSettings(s => ({...s, width: Number(e.target.value)}))} className="w-full p-2 rounded-lg bg-background border border-border" />
-                                               </div>
-                                               <div>
-                                                    <label className="text-xs font-bold uppercase text-muted-foreground">Height</label>
-                                                   <input type="number" value={settings.height} onChange={(e) => setSettings(s => ({...s, height: Number(e.target.value)}))} className="w-full p-2 rounded-lg bg-background border border-border" />
+                                           <div className="space-y-4">
+                                               <p className="text-xs font-medium text-muted-foreground">Original Size: {settings.width} x {settings.height} px</p>
+                                               <div className="grid grid-cols-2 gap-4">
+                                                   <div>
+                                                       <label className="text-xs font-bold uppercase text-foreground mb-1 block">New Width</label>
+                                                       <input type="number" value={settings.width} onChange={(e) => setSettings(s => ({...s, width: Number(e.target.value)}))} className="w-full p-3 rounded-xl bg-background border border-input focus:border-primary outline-none transition-all" />
+                                                   </div>
+                                                   <div>
+                                                        <label className="text-xs font-bold uppercase text-foreground mb-1 block">New Height</label>
+                                                       <input type="number" value={settings.height} onChange={(e) => setSettings(s => ({...s, height: Number(e.target.value)}))} className="w-full p-3 rounded-xl bg-background border border-input focus:border-primary outline-none transition-all" />
+                                                   </div>
                                                </div>
                                            </div>
                                        )}
@@ -165,18 +240,49 @@ export default function ImageToolClient({ tool }: { tool: string }) {
                                                <Slider value={[settings.blur]} min={0} max={50} step={1} onValueChange={(v) => setSettings(s => ({...s, blur: v[0]}))} />
                                            </div>
                                        )}
-                                       {tool === "passport" && (
-                                           <p className="text-sm text-green-500 flex items-center gap-2"><CheckCircle size={14} /> Auto-cropping to 35mm x 45mm</p>
+                                       {tool === "watermark" && (
+                                            <div>
+                                                <label className="text-xs font-bold uppercase text-muted-foreground mb-2 block">Watermark Text</label>
+                                                <input type="text" value={settings.watermarkText} onChange={(e) => setSettings(s => ({...s, watermarkText: e.target.value}))} className="w-full p-3 rounded-xl bg-background border border-input focus:border-primary outline-none transition-all" />
+                                            </div>
                                        )}
-                                       {tool === "bg-remover" && (
-                                           <p className="text-sm text-pink-500">AI Background Removal Active</p>
+                                        {tool === "id-card" && (
+                                            <div>
+                                                <label className="text-xs font-bold uppercase text-muted-foreground mb-2 block">Name on Card</label>
+                                                <input type="text" value={settings.idName} onChange={(e) => setSettings(s => ({...s, idName: e.target.value}))} className="w-full p-3 rounded-xl bg-background border border-input focus:border-primary outline-none transition-all" />
+                                            </div>
+                                       )}
+                                       {tool === "compress" && (
+                                           <div>
+                                               <label className="text-xs font-bold uppercase text-muted-foreground mb-2 block flex justify-between">
+                                                   <span>Quality</span>
+                                                   <span>{Math.round(settings.compressionQuality * 100)}%</span>
+                                               </label>
+                                               <Slider value={[settings.compressionQuality * 100]} min={1} max={100} step={1} onValueChange={(v) => setSettings(s => ({...s, compressionQuality: v[0]/100}))} />
+                                           </div>
+                                       )}
+                                        {tool === "bg-remover" && (
+                                           <div>
+                                               <label className="text-xs font-bold uppercase text-muted-foreground mb-2 block flex justify-between">
+                                                   <span>White Threshold</span>
+                                                   <span>{settings.bgThreshold}</span>
+                                               </label>
+                                               <Slider value={[settings.bgThreshold]} min={0} max={255} step={1} onValueChange={(v) => setSettings(s => ({...s, bgThreshold: v[0]}))} />
+                                               <p className="text-xs text-muted-foreground mt-2">Removes solid white/light backgrounds.</p>
+                                           </div>
+                                       )}
+                                       {tool === "passport" && (
+                                           <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-xl">
+                                                <p className="text-sm text-green-600 dark:text-green-400 flex items-center gap-2 font-medium"><CheckCircle size={16} /> Auto-cropping to 35mm x 45mm</p>
+                                           </div>
                                        )}
                                   </div>
 
                                   <div className="flex gap-4">
-                                      <Button onClick={() => setFile(null)} variant="outline" className="flex-1 py-6">Change File</Button>
-                                      <Button onClick={processImage} disabled={isProcessing} className="flex-1 py-6 font-bold text-lg bg-primary text-primary-foreground hover:bg-primary/90">
-                                          {isProcessing ? "Processing..." : "Process Image"}
+                                      <Button onClick={() => setFile(null)} variant="outline" className="flex-1 py-6 h-auto text-lg hover:bg-muted">Change File</Button>
+                                      <Button onClick={processImage} disabled={isProcessing} className="flex-1 py-6 h-auto font-bold text-lg bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20">
+                                          {isProcessing ? <RefreshCw className="mr-2 animate-spin" /> : <Zap className="mr-2" />}
+                                          {isProcessing ? "Processing..." : "Process Now"}
                                       </Button>
                                   </div>
                               </div>
