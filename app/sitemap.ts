@@ -28,6 +28,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/html-to-pdf',
         '/pdf-to-excel',
         '/pdf-to-pptx',
+        '/image-tools/bg-remover',
+        '/image-tools/passport',
+        '/image-tools/resize',
+        '/image-tools/profile',
+        '/image-tools/crop',
+        '/image-tools/id-card',
+        '/image-tools/blur',
     ]
 
     return routes.map((route) => ({

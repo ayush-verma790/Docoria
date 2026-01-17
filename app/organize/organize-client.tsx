@@ -96,152 +96,176 @@ export default function OrganizeClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <div className="bg-white border-b sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3 sm:gap-4 overflow-hidden">
-              <button 
-                onClick={() => window.history.back()}
-                className="p-2 -ml-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer shrink-0"
-              >
-                <ArrowLeft size={20} className="text-gray-700" />
-              </button>
-              <div className="min-w-0">
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 truncate">Organize Pages</h1>
-                <p className="text-xs sm:text-sm text-gray-500 hidden sm:block truncate">Reorder, rotate, and manage your PDF pages</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-              {file && !result && (
-                <Button
-                  onClick={handleProcess}
-                  disabled={!file || isProcessing}
-                  className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all hover:shadow-md cursor-pointer h-9 sm:h-10 px-3 sm:px-5"
-                >
-                  {isProcessing ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /><span>Saving...</span></>
-                  ) : (
-                    <><Check className="mr-2 h-4 w-4" /><span>Save Changes</span></>
-                  )}
-                </Button>
-              )}
-              {result && (
-                <>
-                  <a href={result.downloadUrl} download>
-                    <Button className="bg-green-600 hover:bg-green-700 text-white h-9 sm:h-10 px-3 sm:px-5">
-                      <Download className="mr-2 h-4 w-4" /><span>Download PDF</span>
-                    </Button>
-                  </a>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => { setResult(null); setFile(null); setPageOrder([]) }}
-                    className="h-9 sm:h-10 px-3 sm:px-5"
+    <div className="min-h-screen bg-[#030014] text-white flex flex-col font-sans selection:bg-purple-500/30 selection:text-white pt-20">
+      
+      {/* Background Atmosphere */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] right-[30%] w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px] mix-blend-screen animate-blob"></div>
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] mix-blend-overlay"></div>
+      </div>
+
+      <div className="sticky top-20 z-40 py-4 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+             <div className="glass-panel p-4 rounded-2xl flex items-center justify-between gap-4 border-white/10 shadow-xl backdrop-blur-3xl">
+                <div className="flex items-center gap-4 overflow-hidden">
+                  <button 
+                    onClick={() => window.history.back()}
+                    className="p-3 hover:bg-white/10 rounded-xl transition-all cursor-pointer shrink-0 text-white/70 hover:text-white"
                   >
-                    <span>New Document</span>
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
+                    <ArrowLeft size={20} />
+                  </button>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                      <Sparkles className="w-4 h-4 text-purple-400" />
+                      <span className="text-xs font-bold text-white uppercase tracking-wider">Editor Mode</span>
+                  </div>
+                  <div className="h-8 w-px bg-white/10 hidden sm:block"></div>
+                  <div className="min-w-0 hidden sm:block">
+                    <h1 className="text-lg font-bold text-white truncate leading-tight">Organize Pages</h1>
+                    <p className="text-xs text-muted-foreground truncate">Reorder, rotate, and manage your PDF</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                  {file && !result && (
+                    <Button
+                      onClick={handleProcess}
+                      disabled={!file || isProcessing}
+                      className="bg-white text-black hover:bg-purple-50 shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all hover:scale-105 cursor-pointer h-12 px-6 rounded-xl font-bold"
+                    >
+                      {isProcessing ? (
+                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" /><span>Saving...</span></>
+                      ) : (
+                        <><Check className="mr-2 h-4 w-4" /><span>Save Changes</span></>
+                      )}
+                    </Button>
+                  )}
+                  {result && (
+                    <>
+                      <a href={result.downloadUrl} download>
+                        <Button className="bg-emerald-500 hover:bg-emerald-400 text-black h-12 px-6 rounded-xl font-bold shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all hover:scale-105">
+                          <Download className="mr-2 h-4 w-4" /><span>Download PDF</span>
+                        </Button>
+                      </a>
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => { setResult(null); setFile(null); setPageOrder([]) }}
+                        className="h-12 px-6 rounded-xl text-white hover:bg-white/10"
+                      >
+                        <span>New Document</span>
+                      </Button>
+                    </>
+                  )}
+                </div>
+             </div>
         </div>
       </div>
-      <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+      <div className="relative z-10 flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {!file ? (
-          <div className="flex items-center justify-center min-h-[50vh]">
-            <div className="w-full max-w-xl mx-auto">
-              <div className="text-center mb-6 sm:mb-8">
-                <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-blue-100 rounded-full mb-4">
-                  <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Upload Your PDF</h2>
-                <p className="text-sm sm:text-base text-gray-600">Select a PDF file to manage its pages</p>
-              </div>
-              <Card className="p-6 sm:p-10 border-2 border-dashed border-gray-300 hover:border-blue-400 hover:bg-shadow rounded-xl">
-                <FileUploader onFileSelect={(files) => setFile(files[0])} accept=".pdf" />
-              </Card>
-            </div>
+          <div className="flex items-center justify-center min-h-[60vh]">
+             <div className="glass-card p-12 rounded-[3.5rem] max-w-2xl w-full text-center relative overflow-hidden group border-white/5">
+                  <div className="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+                  
+                  <div className="w-24 h-24 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-inner ring-1 ring-white/10">
+                      <Upload className="w-10 h-10 text-white" strokeWidth={1.5} />
+                  </div>
+                  <h2 className="text-4xl font-black text-white mb-4 tracking-tight">Upload Your PDF</h2>
+                  <p className="text-lg text-muted-foreground mb-10 font-light">Select a PDF file to reorder, rotate, or remove pages.</p>
+                  
+                  <div className="relative z-10">
+                      <FileUploader onFileSelect={(files) => setFile(files[0])} accept=".pdf" />
+                  </div>
+             </div>
           </div>
         ) : (
-          <div className="space-y-6">
-            <Card className="p-4 sm:p-5 bg-white border shadow-sm rounded-xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex items-start sm:items-center gap-3 sm:gap-4 overflow-hidden">
-                  <div className="p-2.5 bg-blue-50 rounded-lg shrink-0">
-                    <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-gray-900 truncate text-sm sm:text-base">{file.name}</h3>
-                    <div className="flex flex-wrap items-center gap-2 mt-1">
-                      <span className="text-xs sm:text-sm text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">
-                        {pageOrder.length} pages
-                      </span>
-                    </div>
+          <div className="space-y-8">
+            <div className="glass-panel p-6 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-white/5">
+              <div className="flex items-start sm:items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0 ring-1 ring-white/10">
+                  <FileText className="w-6 h-6 text-purple-300" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-bold text-white text-lg truncate">{file.name}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-xs font-medium text-purple-200 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-500/20">
+                      {pageOrder.length} pages
+                    </span>
+                    <span className="text-xs text-muted-foreground">Drag to verify order</span>
                   </div>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => { setFile(null); setResult(null); setPageOrder([]) }}>Change File</Button>
               </div>
-            </Card>
-            <Document 
-              file={file} 
-              onLoadSuccess={onDocumentLoadSuccess}
-              className="w-full"
-            >
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
-                {pageOrder.map((originalPageNum, index) => (
-                  <div
-                    key={`page-${index}-${originalPageNum}`}
-                    draggable
-                    onDragStart={() => handleDragStart(index)}
-                    onDragOver={(e) => handleDragOver(e, index)}
-                    onDragEnd={handleDragEnd}
-                    className={cn(
-                      "group relative bg-white rounded-lg border-2 transition-all duration-200 overflow-hidden",
-                      draggedIndex === index ? "opacity-30 scale-95 border-blue-500 ring-2 ring-blue-100" : "hover:shadow-md hover:border-blue-300 border-gray-200",
-                      "cursor-grab active:cursor-grabbing"
-                    )}
-                  >
-                    <div className="absolute top-2 left-2 z-10">
-                      <div className="bg-gray-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                        {index + 1}
-                      </div>
-                    </div>
-                    <div className="aspect-[3/4] flex items-center justify-center p-2 bg-gray-50 overflow-hidden">
-                      <Page
-                        pageNumber={originalPageNum}
-                        width={180}
-                        rotate={rotations[originalPageNum] || 0}
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                        loading={<div className="w-full aspect-[3/4] bg-gray-100 animate-pulse" />}
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gray-900/0 group-hover:bg-gray-900/40 transition-colors pointer-events-none" />
-                    <div className="absolute top-2 right-2 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                      <button
-                        onClick={(e) => { e.stopPropagation(); rotatePage(originalPageNum); }}
-                        className="p-1.5 sm:p-2 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-600 rounded-lg shadow-sm transition-colors cursor-pointer"
-                        title="Rotate 90°"
+              <Button variant="ghost" className="text-muted-foreground hover:text-red-400 hover:bg-red-500/10 rounded-xl" onClick={() => { setFile(null); setResult(null); setPageOrder([]) }}>
+                  <Trash2 className="w-4 h-4 mr-2" /> Discard
+              </Button>
+            </div>
+
+            <div className="glass-card p-8 rounded-[2.5rem] border-white/5 bg-black/20 min-h-[500px]">
+                <Document 
+                  file={file} 
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  className="w-full"
+                >
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+                    {pageOrder.map((originalPageNum, index) => (
+                      <div
+                        key={`page-${index}-${originalPageNum}`}
+                        draggable
+                        onDragStart={() => handleDragStart(index)}
+                        onDragOver={(e) => handleDragOver(e, index)}
+                        onDragEnd={handleDragEnd}
+                        className={cn(
+                          "group relative bg-white/5 rounded-2xl border transition-all duration-300 overflow-hidden",
+                          draggedIndex === index ? "opacity-30 scale-95 border-purple-500 ring-2 ring-purple-500/50 grayscale" : "hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] border-white/5 hover:border-purple-500/50 hover:-translate-y-1",
+                          "cursor-grab active:cursor-grabbing"
+                        )}
                       >
-                        <RotateCw size={14} className="sm:w-4 sm:h-4" />
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); deletePage(index); }}
-                        className="p-1.5 sm:p-2 bg-white hover:bg-red-50 text-gray-700 hover:text-red-600 rounded-lg shadow-sm transition-colors cursor-pointer"
-                        title="Delete page"
-                      >
-                        <Trash2 size={14} className="sm:w-4 sm:h-4" />
-                      </button>
-                    </div>
-                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                      <div className="bg-white/90 backdrop-blur-sm p-1.5 rounded-full shadow-sm">
-                        <GripVertical size={14} className="text-gray-400" />
+                        <div className="absolute top-3 left-3 z-30 pointer-events-none">
+                          <div className="bg-black/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-lg border border-white/10">
+                            {index + 1}
+                          </div>
+                        </div>
+                        
+                        <div className="aspect-[3/4] flex items-center justify-center p-3 bg-white/5 overflow-hidden transition-colors group-hover:bg-white/10">
+                          <Page
+                            pageNumber={originalPageNum}
+                            width={180}
+                            rotate={rotations[originalPageNum] || 0}
+                            renderTextLayer={false}
+                            renderAnnotationLayer={false}
+                            className="shadow-2xl opacity-90 group-hover:opacity-100 transition-opacity object-cover"
+                            loading={<div className="w-full aspect-[3/4] bg-white/5 animate-pulse rounded-md" />}
+                          />
+                        </div>
+                        
+                        {/* Overlay Actions */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3 gap-2">
+                            <div className="flex items-center gap-2 justify-center pb-2">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); rotatePage(originalPageNum); }}
+                                    className="p-2 bg-white/10 hover:bg-purple-500 text-white rounded-xl backdrop-blur-md border border-white/10 transition-all hover:scale-110"
+                                    title="Rotate 90°"
+                                >
+                                    <RotateCw size={16} />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); deletePage(index); }}
+                                    className="p-2 bg-white/10 hover:bg-red-500 text-white rounded-xl backdrop-blur-md border border-white/10 transition-all hover:scale-110"
+                                    title="Delete page"
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-0">
+                           <GripVertical size={24} className="text-white/30" />
+                        </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </Document>
+                </Document>
+            </div>
           </div>
         )}
       </div>

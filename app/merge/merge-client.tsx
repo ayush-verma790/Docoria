@@ -147,24 +147,30 @@ export default function MergeClient() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground">
-         <SiteHeader />
-         <div className="fixed inset-0 pointer-events-none -z-10">
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] mix-blend-screen"></div>
+    <div className="min-h-screen bg-[#030014] text-white selection:bg-indigo-500/30 selection:text-white">
+         {/* Dynamic Background Atmosphere */}
+         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[140px] mix-blend-screen animate-blob"></div>
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] mix-blend-overlay"></div>
          </div>
-         <div className="relative max-w-7xl mx-auto px-6 pt-32 pb-12">
-             <div className="flex items-center justify-between mb-8">
-                  <div>
-                      <h1 className="text-3xl font-bold mb-2">Combine PDFs</h1>
-                      <p className="text-muted-foreground">Join different PDF files together and change their page order easily.</p>
+
+         <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-12">
+             <div className="flex items-center justify-between mb-12">
+                  <div className="space-y-4">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border-primary/20 text-xs font-semibold text-primary">
+                          <Layers size={14} /> <span>PDF Merge Studio</span>
+                      </div>
+                      <h1 className="text-5xl font-black tracking-tight text-white">Combine PDFs</h1>
+                      <p className="text-lg text-muted-foreground max-w-xl font-light">Join different PDF files together and change their page order easily.</p>
                   </div>
                 {step === 1 && !result && (
-                    <div className="flex gap-2">
-                         <Button variant="ghost" className="text-muted-foreground" onClick={() => setStep(0)}>
-                             Add more files
+                    <div className="flex gap-3">
+                         <Button variant="ghost" className="text-muted-foreground hover:text-white" onClick={() => setStep(0)}>
+                             <Plus className="mr-2" size={16} /> Add Files
                          </Button>
                          <Button 
-                            className="bg-primary text-primary-foreground font-bold hover:bg-primary/90"
+                            className="h-12 px-6 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all hover:scale-105"
                             onClick={handleMerge}
                             disabled={isProcessing}
                          >
@@ -177,46 +183,53 @@ export default function MergeClient() {
              <AnimatePresence mode="wait">
                   {step === 0 && (
                       <motion.div 
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        className="space-y-8 max-w-2xl mx-auto"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="space-y-8 max-w-3xl mx-auto"
                       >
-                          <Card className="p-8 bg-card/50 border-border backdrop-blur-md">
+                          <div className="p-10 rounded-[2.5rem] bg-[#0A0A0F]/60 border border-white/5 shadow-2xl relative overflow-hidden group backdrop-blur-xl">
+                              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
                               <FileUploader onFileSelect={handleFilesSelected} accept=".pdf" multiple />
-                          </Card>
+                          </div>
+                          
                           {files.length > 0 && (
-                              <Card className="p-4 bg-card border-border divide-y divide-border">
-                                  {files.map((file, i) => (
-                                      <div key={i} className="flex items-center justify-between py-3 px-2">
-                                          <div className="flex items-center gap-3">
-                                              <div className={`w-8 h-8 rounded flex items-center justify-center text-white font-bold text-xs ${COLORS[i % COLORS.length]}`}>
-                                                  {i + 1}
-                                              </div>
-                                              <div className="text-sm font-medium text-foreground">{file.name}</div>
-                                              <div className="text-xs text-muted-foreground">{(file.size/1024/1024).toFixed(1)}MB</div>
-                                          </div>
-                                          <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-red-400 p-2">
-                                              <X size={16} />
-                                          </button>
-                                      </div>
-                                  ))}
-                                  <div className="pt-4 px-2">
-                                      {error && <p className="text-sm text-destructive mb-4">{error}</p>}
-                                      <Button className="w-full bg-primary hover:bg-primary/90 font-bold" onClick={preparePages} disabled={isProcessing}>
+                              <div className="p-6 rounded-[2rem] bg-[#0A0A0F]/60 border border-white/5 space-y-4 backdrop-blur-xl">
+                                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest px-2">Selected Files</h3>
+                                  <div className="space-y-2">
+                                    {files.map((file, i) => (
+                                        <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors group">
+                                            <div className="flex items-center gap-4">
+                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-lg ${COLORS[i % COLORS.length]}`}>
+                                                    {i + 1}
+                                                </div>
+                                                <div>
+                                                    <div className="font-bold text-white group-hover:text-indigo-200 transition-colors">{file.name}</div>
+                                                    <div className="text-xs text-gray-400">{(file.size/1024/1024).toFixed(1)}MB</div>
+                                                </div>
+                                            </div>
+                                            <button onClick={() => removeFile(i)} className="text-gray-400 hover:text-red-400 p-2 hover:bg-white/5 rounded-lg transition-all">
+                                                <X size={18} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                  </div>
+                                  <div className="pt-4">
+                                      {error && <div className="text-sm text-red-200 mb-4 bg-red-500/10 p-3 rounded-xl border border-red-500/20 text-center flex items-center justify-center gap-2"><div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>{error}</div>}
+                                      <Button className="w-full h-14 bg-white text-black hover:bg-indigo-50 font-bold text-lg rounded-xl shadow-lg shadow-white/10" onClick={preparePages} disabled={isProcessing}>
                                           {isProcessing ? <Loader2 className="animate-spin mr-2" /> : <ArrowRight className="mr-2" />}
                                           Next: Organize Pages
                                       </Button>
                                   </div>
-                              </Card>
+                              </div>
                           )}
                       </motion.div>
                   )}
                   {step === 1 && (
                       <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 20 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
                       >
                          {!result ? (
                           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
@@ -228,56 +241,57 @@ export default function MergeClient() {
                                       onDragOver={(e) => handleDragOver(e, i)}
                                       onDragEnd={handleDragEnd}
                                       className={cn(
-                                          "group relative space-y-2 cursor-grab active:cursor-grabbing transition-all",
+                                          "group relative space-y-3 cursor-grab active:cursor-grabbing transition-all hover:-translate-y-2 duration-300",
                                           draggedIndex === i ? "opacity-30 scale-95" : "opacity-100"
                                       )}
                                   >
-                                      <div className="relative aspect-[3/4] bg-card border border-border rounded-lg overflow-hidden group-hover:border-primary/50 group-hover:shadow-[0_0_20px_var(--color-primary)] transition-all">
+                                      <div className="relative aspect-[3/4] bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden group-hover:border-primary/50 group-hover:shadow-[0_10px_30px_rgba(var(--primary),0.2)] transition-all">
                                           <div className="absolute top-2 left-2 z-10">
-                                               <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-lg ${COLORS[page.fileIndex % COLORS.length]}`}>
+                                               <div className={`w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold text-white shadow-lg ${COLORS[page.fileIndex % COLORS.length]}`}>
                                                    {page.fileIndex + 1}
                                                </div>
                                           </div>
-                                          <Document file={fileUrls[page.fileIndex]} className="w-full h-full scale-[0.6] origin-top">
+                                          <Document file={fileUrls[page.fileIndex]} className="w-full h-full scale-[0.6] origin-top opacity-90 group-hover:opacity-100 transition-opacity">
                                               <Page 
                                                 pageNumber={page.pageIndex + 1} 
                                                 rotate={page.rotation} 
                                                 width={200} 
                                                 renderTextLayer={false} 
                                                 renderAnnotationLayer={false}
-                                                loading={<div className="w-full h-full bg-muted animate-pulse" />}
+                                                loading={<div className="w-full h-full bg-white/5 animate-pulse" />}
                                               />
                                           </Document>
-                                          <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                              <button onClick={() => rotatePage(i)} className="p-1.5 bg-white/10 hover:bg-primary rounded-md transition-colors"><RotateCw size={14} className="text-white" /></button>
-                                              <button onClick={() => deletePage(i)} className="p-1.5 bg-white/10 hover:bg-destructive rounded-md transition-colors"><Trash2 size={14} className="text-white" /></button>
+                                          <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex justify-center gap-3 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+                                              <button onClick={() => rotatePage(i)} className="p-2 bg-white/10 hover:bg-primary rounded-lg transition-colors backdrop-blur-md border border-white/10"><RotateCw size={14} className="text-white" /></button>
+                                              <button onClick={() => deletePage(i)} className="p-2 bg-white/10 hover:bg-red-500 rounded-lg transition-colors backdrop-blur-md border border-white/10"><Trash2 size={14} className="text-white" /></button>
                                           </div>
                                       </div>
                                       <div className="flex items-center justify-center gap-2">
-                                          <GripVertical size={12} className="text-muted-foreground group-hover:text-primary" />
-                                          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-tighter">Page {i + 1}</span>
+                                          <GripVertical size={12} className="text-muted-foreground/50 group-hover:text-primary transition-colors" />
+                                          <span className="text-xs font-bold text-muted-foreground group-hover:text-white transition-colors uppercase tracking-widest">Page {i + 1}</span>
                                       </div>
                                   </div>
                               ))}
                           </div>
                          ) : (
-                             <Card className="max-w-xl mx-auto p-12 text-center bg-card border-border backdrop-blur-xl">
-                                  <div className="w-20 h-20 bg-emerald-500/20 border border-emerald-500/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
-                                      <Check className="text-emerald-400 w-10 h-10" />
+                             <div className="max-w-xl mx-auto p-12 text-center glass-card rounded-[3rem]">
+                                  <div className="w-24 h-24 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-[0_20px_50px_rgba(16,185,129,0.3)] animate-float">
+                                      <Check className="text-white w-12 h-12" />
                                   </div>
-                                  <h2 className="text-2xl font-bold mb-2">PDFs Combined!</h2>
-                                  <p className="text-muted-foreground mb-8 font-medium">Your new documents is ready for download.</p>
-                                  <div className="flex gap-4">
-                                      <a href={result.downloadUrl} download={result.filename} className="flex-1">
-                                          <Button className="w-full bg-primary text-primary-foreground font-bold hover:bg-primary/90 transition-colors">
-                                              <Download className="mr-2" size={18} /> Download PDF
+                                  <h2 className="text-4xl font-black text-white mb-4 tracking-tight">Merge Complete!</h2>
+                                  <p className="text-muted-foreground mb-10 text-lg">Your combined document is ready for download.</p>
+                                  
+                                  <div className="flex flex-col gap-4">
+                                      <a href={result.downloadUrl} download={result.filename} className="w-full">
+                                          <Button className="w-full h-16 bg-white text-black font-black text-xl hover:bg-slate-200 rounded-2xl shadow-xl transition-transform hover:scale-105">
+                                              <Download className="mr-2" size={24} /> Download PDF
                                           </Button>
                                       </a>
-                                      <Button variant="outline" onClick={() => { setStep(0); setResult(null); setFiles([]); setPages([]); }} className="flex-1 border-border hover:bg-accent hover:text-accent-foreground">
-                                          Start New
+                                      <Button variant="ghost" onClick={() => { setStep(0); setResult(null); setFiles([]); setPages([]); }} className="text-muted-foreground hover:text-white hover:bg-white/5 h-12 rounded-xl">
+                                          Merge Another File
                                       </Button>
                                   </div>
-                             </Card>
+                             </div>
                          )}
                       </motion.div>
                   )}

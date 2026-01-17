@@ -70,11 +70,32 @@ export async function POST(request: NextRequest) {
     // --- Process Text Edits ---
     if (textEditsJson) {
       const textEdits = JSON.parse(textEditsJson)
-      const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
-      const timesFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
-      const courierFont = await pdfDoc.embedFont(StandardFonts.Courier)
-      const timesBoldFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold)
-      const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+
+      // Embed all standard fonts
+      const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica)
+      const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+      const helveticaOblique = await pdfDoc.embedFont(StandardFonts.HelveticaOblique)
+      const helveticaBoldOblique = await pdfDoc.embedFont(StandardFonts.HelveticaBoldOblique)
+
+      const times = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+      const timesBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold)
+      const timesItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic)
+      const timesBoldItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanBoldItalic)
+
+      const courier = await pdfDoc.embedFont(StandardFonts.Courier)
+      const courierBold = await pdfDoc.embedFont(StandardFonts.CourierBold)
+      const courierOblique = await pdfDoc.embedFont(StandardFonts.CourierOblique)
+      const courierBoldOblique = await pdfDoc.embedFont(StandardFonts.CourierBoldOblique)
+
+      // Hex to RGB helper
+      const hexToRgb = (hex: string) => {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16) / 255,
+          g: parseInt(result[2], 16) / 255, // Fixed typo
+          b: parseInt(result[3], 16) / 255
+        } : { r: 0, g: 0, b: 0 };
+      }
 
       for (const edit of textEdits) {
         const pageIndex = (edit.page || 1) - 1
@@ -83,48 +104,116 @@ export async function POST(request: NextRequest) {
         const page = pdfDoc.getPage(pageIndex)
         const { height } = page.getSize()
 
-        // 1. "Erase" original text with white rectangle
-        // Coordinates from frontend are Top-Left
-        const pdfX = edit.x
-        // Adjust Y for bottom-left origin
-        const pdfY = height - edit.y - edit.height
+        // Dynamic Coordinate Scaling:
+        // Adjust coordinates if the client-side render size differed from the actual PDF point size.
+        // This solves misalignment issues caused by browser DPI or PDF viewer scaling.
+        const { width: pdfPageWidth, height: pdfPageHeight } = page.getSize()
+        let scaleX = 1
+        let scaleY = 1
+        if (edit.pageWidth && edit.pageHeight) {
+          scaleX = pdfPageWidth / edit.pageWidth
+          scaleY = pdfPageHeight / edit.pageHeight
+        }
 
-        // Add some padding to cover fully
-        page.drawRectangle({
-          x: pdfX - 1,
-          y: pdfY - 1,
-          width: edit.width + 2,
-          height: edit.height + 2,
-          color: rgb(1, 1, 1), // White
-        })
+        // Apply Scaling
+        const finalX = edit.x * scaleX
+        const finalY = edit.y * scaleY
+        const finalWidth = edit.width * scaleX
+        const finalHeight = edit.height * scaleY
 
-        // 2. Draw new text
-        let font = helveticaFont
-        if (edit.fontFamily) {
-          const lower = edit.fontFamily.toLowerCase()
-          if (lower.includes('times') || lower.includes('serif')) font = timesFont
-          if (lower.includes('courier') || lower.includes('mono')) font = courierFont
-          if (lower.includes('bold')) {
-            if (font === timesFont) font = timesBoldFont
-            else font = helveticaBoldFont
+        // --- Approach 1: Full PDF Object Rewriting ---
+        // Attempt to "delete" the object from the stream if possible
+        if (edit.originalText && edit.originalText.length > 3) {
+          try {
+            // @ts-ignore
+            const { Contents } = page.node.normalizedEntries()
+            if (Contents) {
+              Contents.asArray().forEach((streamRef: any) => {
+                const stream = pdfDoc.context.lookup(streamRef) as any
+                if (stream) {
+                  let contentString = ""
+                  const buffer = stream.getContents()
+                  for (let i = 0; i < buffer.length; i++) contentString += String.fromCharCode(buffer[i])
+
+                  const safeText = edit.originalText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                  const patternTJ = new RegExp(`\\(${safeText}\\)\\s*Tj`, 'g')
+
+                  if (patternTJ.test(contentString)) {
+                    contentString = contentString.replace(patternTJ, '() Tj')
+                    stream.setContents(Buffer.from(contentString))
+                  }
+                }
+              })
+            }
+          } catch (e) {
+            console.log("Stream redaction failed:", e)
           }
         }
 
-        // Parse font size "12px" -> 12
-        const fontSize = parseFloat(edit.fontSize) || 12
+        // 1. "Visual Masking" (Safety Net)
+        // Even if we "delete" the object, we draw a white box to ensure 100% visual coverage 
+        // in case our stream pattern match failed (e.g. hex encoding).
+        const pdfY = pdfPageHeight - finalY - finalHeight
 
-        // Adjust Y back up for text baseline approximated
-        // pdf-lib drawText y is baseline. HTML top-left y is top of box.
-        // A rough approximation is y + height - fontSize + small_padding
-        // Or usually simple: y + 2
+        page.drawRectangle({
+          x: finalX - 2,
+          y: pdfY - 3,
+          width: finalWidth + 4,
+          height: finalHeight + 6,
+          color: rgb(1, 1, 1),
+        })
+
+        // 2. Select Font based on Family + Weight + Style
+        let isBold = false
+        if (typeof edit.fontWeight === 'string') {
+          isBold = edit.fontWeight === 'bold' || edit.fontWeight === '700' || edit.fontWeight === '800'
+        } else if (typeof edit.fontWeight === 'number') {
+          isBold = edit.fontWeight >= 700
+        }
+
+        let isItalic = edit.fontStyle === 'italic' || edit.fontStyle === 'oblique'
+
+        let font = helvetica
+        const family = (edit.fontFamily || '').toLowerCase()
+
+        if (family.includes('times') || family.includes('serif')) {
+          if (isBold && isItalic) font = timesBoldItalic
+          else if (isBold) font = timesBold
+          else if (isItalic) font = timesItalic
+          else font = times
+        } else if (family.includes('courier') || family.includes('mono')) {
+          if (isBold && isItalic) font = courierBoldOblique
+          else if (isBold) font = courierBold
+          else if (isItalic) font = courierOblique
+          else font = courier
+        } else {
+          // Default Sans / Helvetica
+          if (isBold && isItalic) font = helveticaBoldOblique
+          else if (isBold) font = helveticaBold
+          else if (isItalic) font = helveticaOblique
+          else font = helvetica
+        }
+
+        const fontSize = parseFloat(edit.fontSize) || 12
+        const textColor = edit.color ? hexToRgb(edit.color) : { r: 0, g: 0, b: 0 }
+
+        // Calculate text width for alignment
+        const textWidth = font.widthOfTextAtSize(edit.text, fontSize)
+        let drawX = finalX
+
+        if (edit.align === 'center') {
+          drawX = finalX + (finalWidth - textWidth) / 2
+        } else if (edit.align === 'right') {
+          drawX = finalX + finalWidth - textWidth
+        }
 
         page.drawText(edit.text, {
-          x: pdfX,
-          y: pdfY + (edit.height * 0.2), // Basic baseline shift
+          x: drawX,
+          y: pdfY + (finalHeight * 0.2), // Slight baseline adjustment
           size: fontSize,
           font: font,
-          color: rgb(0, 0, 0), // Default black for now, could parse rgb from edit.color
-          maxWidth: edit.width + 50 // Allow some expansion
+          color: rgb(textColor.r, textColor.g, textColor.b),
+          maxWidth: finalWidth + 100
         })
       }
     }
