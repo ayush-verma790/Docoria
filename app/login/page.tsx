@@ -19,7 +19,7 @@ export default function LoginPage() {
 
   return (
     <div 
-      className="min-h-screen bg-[#020617] text-slate-200 selection:bg-indigo-500/30 font-sans relative overflow-hidden flex items-center justify-center px-4"
+      className="dark min-h-screen bg-[#020617] text-slate-200 selection:bg-indigo-500/30 font-sans relative overflow-hidden flex items-center justify-center px-4"
       onMouseMove={handleMouseMove}
     >
       {/* Background Ambience & Floating Docs */}

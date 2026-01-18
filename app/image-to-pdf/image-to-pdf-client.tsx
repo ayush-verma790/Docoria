@@ -144,7 +144,7 @@ export default function ImageToPdfClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30">
+    <div className="dark min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30">
       <SiteHeader />
        {/* Background */}
        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">

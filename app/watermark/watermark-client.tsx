@@ -278,7 +278,7 @@ export default function WatermarkClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030014] text-white selection:bg-red-500/30 selection:text-white font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#030014] text-white selection:bg-red-500/30 selection:text-white font-sans overflow-hidden">
       
       {/* Dynamic Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -317,6 +317,10 @@ export default function WatermarkClient() {
                 {/* SETTINGS PANEL */}
                 <div className="h-full flex flex-col gap-6 p-6 rounded-[2rem] bg-[#0A0A0F] border border-white/5 shadow-2xl backdrop-blur-xl overflow-y-auto custom-scrollbar">
                     
+                    <div className="flex items-center gap-2 mb-2">
+                        <span className="w-4 h-4 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center text-[10px] font-bold">1</span>
+                        <Label className="text-xs uppercase font-bold text-gray-400">Content Source</Label>
+                    </div>
                     <Tabs value={mode} onValueChange={(v) => setMode(v as any)} className="w-full">
                         <TabsList className="grid w-full grid-cols-2 bg-white/5 p-1 rounded-xl">
                             <TabsTrigger value="text" className="rounded-lg data-[state=active]:bg-red-600 data-[state=active]:text-white">Text</TabsTrigger>
@@ -369,8 +373,11 @@ export default function WatermarkClient() {
                     {/* Common Controls */}
                     <div className="space-y-6 flex-1">
                         <div className="space-y-3">
-                            <div className="flex justify-between">
-                                <Label className="text-xs uppercase font-bold text-gray-500">Pattern</Label>
+                            <div className="flex justify-between items-center">
+                                <Label className="text-xs uppercase font-bold text-gray-400 flex items-center gap-2">
+                                    <span className="w-4 h-4 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center text-[10px]">2</span>
+                                    Pattern
+                                </Label>
                                 <span className={cn("text-xs font-bold", isTiled ? "text-red-400" : "text-gray-500")}>
                                     {isTiled ? "Tiled Pattern" : "Single Stamp"}
                                 </span>
@@ -395,7 +402,10 @@ export default function WatermarkClient() {
 
                         {!isTiled && (
                             <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
-                                <Label className="text-xs uppercase font-bold text-gray-500">Position</Label>
+                                <Label className="text-xs uppercase font-bold text-gray-400 flex items-center gap-2">
+                                    <span className="w-4 h-4 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center text-[10px]">3</span>
+                                    Position
+                                </Label>
                                 <div className="grid grid-cols-3 gap-2 max-w-[160px] mx-auto bg-black/20 p-2 rounded-xl">
                                     {['tl', 'tc', 'tr', 'ml', 'mc', 'mr', 'bl', 'bc', 'br'].map((p) => (
                                         <button
@@ -405,7 +415,7 @@ export default function WatermarkClient() {
                                                 "w-10 h-10 rounded-lg border flex items-center justify-center transition-all",
                                                 position === p 
                                                     ? "bg-red-600 border-red-500 text-white shadow-lg scale-105" 
-                                                    : "bg-white/5 border-white/10 text-gray-600 hover:bg-white/10 hover:text-white"
+                                                    : "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:text-white"
                                             )}
                                         >
                                             <div className="w-1.5 h-1.5 bg-current rounded-full" />
@@ -416,8 +426,13 @@ export default function WatermarkClient() {
                         )}
 
                         <div className="space-y-4 border-t border-white/5 pt-4">
+                            <Label className="text-xs uppercase font-bold text-gray-400 flex items-center gap-2 mb-2">
+                                <span className="w-4 h-4 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center text-[10px]">4</span>
+                                Appearance
+                            </Label>
+
                             <div className="space-y-3">
-                                <div className="flex justify-between text-xs font-bold uppercase text-gray-500">
+                                <div className="flex justify-between text-xs font-bold uppercase text-gray-400">
                                     <span>Opacity</span>
                                     <span className="text-white">{Math.round(opacity * 100)}%</span>
                                 </div>
@@ -425,7 +440,7 @@ export default function WatermarkClient() {
                             </div>
                             
                             <div className="space-y-3">
-                                <div className="flex justify-between text-xs font-bold uppercase text-gray-500">
+                                <div className="flex justify-between text-xs font-bold uppercase text-gray-400">
                                     <span>Rotation</span>
                                     <span className="text-white">{rotation}°</span>
                                 </div>
@@ -433,7 +448,7 @@ export default function WatermarkClient() {
                             </div>
 
                             <div className="space-y-3">
-                                <div className="flex justify-between text-xs font-bold uppercase text-gray-500">
+                                <div className="flex justify-between text-xs font-bold uppercase text-gray-400">
                                     <span>Size / Scale</span>
                                     <span className="text-white">{scale}x</span>
                                 </div>

@@ -147,7 +147,7 @@ export default function CropClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#022c22] text-white selection:bg-emerald-500/30 selection:text-white font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#022c22] text-white selection:bg-emerald-500/30 selection:text-white font-sans overflow-hidden">
         <SiteHeader />
         
         {/* Background Atmosphere */}

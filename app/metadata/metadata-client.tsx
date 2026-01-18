@@ -91,7 +91,7 @@ export default function MetadataClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#05010d] text-white selection:bg-purple-500/30 selection:text-white font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#05010d] text-white selection:bg-purple-500/30 selection:text-white font-sans overflow-hidden">
         <SiteHeader />
         
         {/* Background Atmosphere */}

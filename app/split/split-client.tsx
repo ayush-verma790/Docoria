@@ -77,7 +77,7 @@ export default function SplitClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030014] text-white selection:bg-cyan-500/30 selection:text-white font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#030014] text-white selection:bg-cyan-500/30 selection:text-white font-sans overflow-hidden">
       <SiteHeader />
       
       {/* Background Atmosphere */}

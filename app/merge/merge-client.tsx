@@ -254,7 +254,7 @@ export default function MergeClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030014] text-white selection:bg-indigo-500/30 selection:text-white font-sans">
+    <div className="dark min-h-screen bg-[#030014] text-white selection:bg-indigo-500/30 selection:text-white font-sans">
          <SiteHeader />
          <TooltipProvider>
             {/* Dynamic Background */}

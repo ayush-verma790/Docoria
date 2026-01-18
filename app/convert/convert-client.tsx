@@ -118,7 +118,7 @@ export default function ConvertClient({ initialFormat = "pdf" }: { initialFormat
 
   return (
     <div 
-        className="min-h-screen bg-[#030014] text-white font-sans relative overflow-hidden selection:bg-indigo-500/30 selection:text-white"
+        className="dark min-h-screen bg-[#030014] text-white font-sans relative overflow-hidden selection:bg-indigo-500/30 selection:text-white"
         onMouseMove={handleMouseMove}
     >
         

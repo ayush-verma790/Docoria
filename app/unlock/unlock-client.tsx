@@ -62,7 +62,7 @@ export default function UnlockClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070202] text-white selection:bg-orange-500/30 selection:text-white font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#070202] text-white selection:bg-orange-500/30 selection:text-white font-sans overflow-hidden">
         <SiteHeader />
         
         {/* Background Atmosphere */}

@@ -40,7 +40,7 @@ export default function HtmlToPdfClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white selection:bg-cyan-500/30">
+    <div className="dark min-h-screen bg-[#020617] text-white selection:bg-cyan-500/30">
         <SiteHeader />
         
         <div className="max-w-4xl mx-auto py-32 px-6">

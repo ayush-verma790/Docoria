@@ -168,7 +168,7 @@ export default function ChatClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030014] text-white font-sans overflow-hidden selection:bg-purple-500/30 selection:text-white relative">
+    <div className="dark min-h-screen bg-[#030014] text-white font-sans overflow-hidden selection:bg-purple-500/30 selection:text-white relative">
         
         {/* Background Atmosphere */}
          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">

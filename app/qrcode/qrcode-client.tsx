@@ -179,7 +179,7 @@ export default function QrCodePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-emerald-500/30 font-sans">
+    <div className="dark min-h-screen bg-background text-foreground selection:bg-emerald-500/30 font-sans">
         <SiteHeader />
         
         <div className="fixed inset-0 pointer-events-none overflow-hidden">

@@ -176,7 +176,7 @@ export default function ScannerClient() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-pink-500/30">
+    <div className="dark min-h-screen bg-background text-foreground font-sans selection:bg-pink-500/30">
         <SiteHeader />
         
         {/* Hidden Canvas for Processing */}

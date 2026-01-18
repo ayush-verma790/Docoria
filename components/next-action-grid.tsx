@@ -44,21 +44,21 @@ export function NextActionGrid({ file }: NextActionGridProps) {
                  <div className="h-px flex-1 bg-white/10"></div>
              </div>
 
-             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+             <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
                  {tools.map((tool) => (
                      <motion.button
                         key={tool.name}
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.02, translateY: -2 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => handleNavigate(tool.path)}
-                        className="flex flex-col items-center justify-center gap-3 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 transition-all group text-center"
+                        className="flex flex-col items-center justify-center gap-2 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all group text-center min-h-[100px]"
                      >
-                         <div className="w-10 h-10 rounded-full bg-black/20 flex items-center justify-center text-gray-400 group-hover:text-cyan-400 group-hover:bg-cyan-400/10 transition-colors">
-                             <tool.icon size={20} />
+                         <div className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-gray-400 group-hover:text-cyan-400 group-hover:bg-cyan-400/10 transition-colors">
+                             <tool.icon size={16} />
                          </div>
-                         <div>
-                             <div className="font-bold text-sm text-gray-200">{tool.name}</div>
-                             <div className="text-[10px] text-gray-500">{tool.desc}</div>
+                         <div className="space-y-0.5">
+                             <div className="font-bold text-xs text-gray-200 leading-tight">{tool.name}</div>
+                             <div className="text-[9px] text-gray-500 leading-tight line-clamp-2 max-w-[80px] mx-auto opacity-70 group-hover:opacity-100">{tool.desc}</div>
                          </div>
                      </motion.button>
                  ))}

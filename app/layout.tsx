@@ -131,7 +131,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   }
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${spaceGrotesk.variable} ${inter.variable}`}> 
+    <html lang="en" suppressHydrationWarning className={`dark ${spaceGrotesk.variable} ${inter.variable}`}> 
       <body className={`font-sans antialiased bg-background text-foreground selection:bg-primary/30 selection:text-primary-foreground min-h-screen transition-colors duration-300`}>
         {/* Structured Data for SEO */}
         <script
@@ -141,8 +141,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
         <ThemeProvider
             attribute="class"
-            defaultTheme="system"
-            enableSystem
+            defaultTheme="dark"
+            enableSystem={false}
             disableTransitionOnChange
           >
             {/* Global Background & Noise */}

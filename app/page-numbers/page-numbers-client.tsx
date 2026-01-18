@@ -94,7 +94,7 @@ export default function PageNumbersClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#020410] text-white selection:bg-blue-500/30 selection:text-white font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#020410] text-white selection:bg-blue-500/30 selection:text-white font-sans overflow-hidden">
         <SiteHeader />
         
         {/* Background Atmosphere */}

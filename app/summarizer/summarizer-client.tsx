@@ -89,7 +89,7 @@ export default function SummarizerClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030014] text-white font-sans selection:bg-teal-500/30 selection:text-white relative overflow-hidden">
+    <div className="dark min-h-screen bg-[#030014] text-white font-sans selection:bg-teal-500/30 selection:text-white relative overflow-hidden">
         
         {/* Background Atmosphere */}
          <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">

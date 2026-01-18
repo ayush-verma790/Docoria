@@ -665,7 +665,7 @@ export default function EditClient() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row h-screen overflow-hidden text-foreground pt-20">
+    <div className="dark min-h-screen bg-background flex flex-col md:flex-row h-screen overflow-hidden text-foreground pt-20">
         {/* Left Panel */}
         <div className="w-full md:w-96 bg-card border-r border-border p-6 flex flex-col gap-6 overflow-y-auto z-10 shadow-lg">
              {/* Header */}

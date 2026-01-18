@@ -116,7 +116,7 @@ export default function DashboardPage() {
 
   return (
     <div 
-      className="min-h-screen bg-[#020617] text-slate-200 selection:bg-indigo-500/30 font-sans"
+      className="dark min-h-screen bg-[#020617] text-slate-200 selection:bg-indigo-500/30 font-sans"
       onMouseMove={handleMouseMove}
     >
       <SiteHeader />

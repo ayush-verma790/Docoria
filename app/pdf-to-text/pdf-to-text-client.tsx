@@ -76,7 +76,7 @@ export default function PdfToTextClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white font-sans selection:bg-teal-500/30">
+    <div className="dark min-h-screen bg-[#020617] text-white font-sans selection:bg-teal-500/30">
         <SiteHeader />
         
         {/* Background */}

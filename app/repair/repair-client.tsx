@@ -50,7 +50,7 @@ export default function RepairClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030014] text-white selection:bg-indigo-500/30 selection:text-white font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#030014] text-white selection:bg-indigo-500/30 selection:text-white font-sans overflow-hidden">
         
         {/* Background Atmosphere */}
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">

@@ -89,7 +89,7 @@ export default function PdfToJpgClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030014] text-white selection:bg-yellow-500/30 font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#030014] text-white selection:bg-yellow-500/30 font-sans overflow-hidden">
         <SiteHeader />
         
         {/* Background Atmosphere */}

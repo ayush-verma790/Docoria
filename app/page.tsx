@@ -56,7 +56,7 @@ export default function LandingPage() {
   return (
     <div 
       ref={containerRef}
-      className="min-h-screen bg-background text-foreground overflow-x-hidden font-sans selection:bg-purple-500/30 selection:text-purple-900 dark:selection:text-white transition-colors duration-300"
+      className="dark min-h-screen bg-background text-foreground overflow-x-hidden font-sans selection:bg-purple-500/30 selection:text-purple-900 dark:selection:text-white transition-colors duration-300"
       onMouseMove={handleMouseMove}
     >
 

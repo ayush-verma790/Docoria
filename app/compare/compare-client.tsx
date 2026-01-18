@@ -36,7 +36,7 @@ export default function CompareClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white font-sans selection:bg-blue-500/30">
+    <div className="dark min-h-screen bg-[#0f172a] text-white font-sans selection:bg-blue-500/30">
         <SiteHeader />
         
         {/* Background Atmosphere */}

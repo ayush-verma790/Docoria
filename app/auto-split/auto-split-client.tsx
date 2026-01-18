@@ -116,7 +116,7 @@ export default function AutoSplitClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-orange-500/30">
+    <div className="dark min-h-screen bg-[#050505] text-white font-sans selection:bg-orange-500/30">
         <SiteHeader />
         
         {/* Background */}

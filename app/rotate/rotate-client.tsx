@@ -88,7 +88,7 @@ export default function RotateClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-white selection:bg-indigo-500/30 font-sans overflow-hidden">
+    <div className="dark min-h-screen bg-[#0F172A] text-white selection:bg-indigo-500/30 font-sans overflow-hidden">
         <SiteHeader />
         
         {/* Background Atmosphere */}

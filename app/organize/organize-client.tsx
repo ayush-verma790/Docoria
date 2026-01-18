@@ -103,7 +103,7 @@ export default function OrganizeClient({ title = "Organize Studio" }: { title?: 
   }
 
   return (
-    <div className="min-h-screen bg-[#030014] text-white flex flex-col font-sans selection:bg-purple-500/30 selection:text-white pt-20">
+    <div className="dark min-h-screen bg-[#030014] text-white flex flex-col font-sans selection:bg-purple-500/30 selection:text-white pt-20">
       
       {/* Background Atmosphere */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">

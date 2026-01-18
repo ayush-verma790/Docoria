@@ -3,20 +3,12 @@
 import * as React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Layers, Sun, Moon } from "lucide-react"
+import { Menu, X, Layers } from "lucide-react"
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { useTheme } from "next-themes"
 
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false)
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  // Prevent hydration mismatch
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
 
   return (
     <>
@@ -47,15 +39,6 @@ export function SiteHeader() {
                 </nav>
 
                 <div className="flex items-center gap-3">
-                     {mounted && (
-                         <button
-                            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                            className="p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-                            aria-label="Toggle theme"
-                         >
-                            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
-                         </button>
-                     )}
                      
                      <Link href="/login" className="hidden md:block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-4 py-2">
                         Sign In
