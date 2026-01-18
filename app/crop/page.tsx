@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import CropClient from './crop-client'
+
 
 export const metadata: Metadata = {
   title: "Crop PDF - Trim Margins & Adjust Page Area | Docoria",
@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   }
 }
 
+import CropLoader from './crop-loader'
+
 export default function CropPage() {
   const jsonLd = {
       "@context": "https://schema.org",
@@ -58,7 +60,7 @@ export default function CropPage() {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <CropClient />
+        <CropLoader />
       </>
   )
 }

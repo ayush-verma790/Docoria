@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import RotateClient from './rotate-client'
+
 
 export const metadata: Metadata = {
   title: "Rotate PDF - Permanently Rotate PDF Pages Online | Docoria",
@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   }
 }
 
+import RotateLoader from './rotate-loader'
+
 export default function RotatePage() {
   const jsonLd = {
       "@context": "https://schema.org",
@@ -58,7 +60,7 @@ export default function RotatePage() {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <RotateClient />
+        <RotateLoader />
       </>
   )
 }

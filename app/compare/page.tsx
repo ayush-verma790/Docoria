@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import CompareClient from './compare-client'
+
 
 export const metadata: Metadata = {
   title: "Compare PDF - Visualize Differences Online | Docoria",
@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   }
 }
 
+import CompareLoader from './compare-loader'
+
 export default function ComparePage() {
   const jsonLd = {
       "@context": "https://schema.org",
@@ -58,7 +60,7 @@ export default function ComparePage() {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <CompareClient />
+        <CompareLoader />
       </>
   )
 }

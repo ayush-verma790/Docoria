@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import PdfToTextClient from './pdf-to-text-client'
+
 
 export const metadata: Metadata = {
   title: "Convert PDF to Text - Extract Content Online | Docoria",
@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   }
 }
 
+import PdfToTextLoader from './pdf-to-text-loader'
+
 export default function PdfToTextPage() {
   const jsonLd = {
       "@context": "https://schema.org",
@@ -58,7 +60,7 @@ export default function PdfToTextPage() {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <PdfToTextClient />
+        <PdfToTextLoader />
       </>
   )
 }

@@ -10,18 +10,8 @@ const MAX_DAILY_COMPRESSIONS = 10
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser()
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
+    // Public access enabled - no auth check
 
-    const usage = await getUsageToday(user.userId)
-    if (usage && usage.compressions_used >= MAX_DAILY_COMPRESSIONS) {
-      return NextResponse.json(
-        { error: `Daily compression limit (${MAX_DAILY_COMPRESSIONS}) reached` },
-        { status: 429 },
-      )
-    }
 
     const formData = await request.formData()
     const file = formData.get("file") as File
@@ -58,7 +48,7 @@ export async function POST(request: NextRequest) {
       await rm(inputFile)
     } catch (e) { }
 
-    await createOrUpdateUsageTracking(user.userId, "compressions_used", 1)
+    // await createOrUpdateUsageTracking(user.userId, "compressions_used", 1)
 
     return NextResponse.json({
       originalSize,

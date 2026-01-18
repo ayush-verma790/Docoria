@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import AutoSplitClient from './auto-split-client'
+
 
 export const metadata: Metadata = {
   title: "Auto Split PDF - Split by Page, Size or Text | Docoria",
@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   }
 }
 
+import AutoSplitLoader from './auto-split-loader'
+
 export default function AutoSplitPage() {
   const jsonLd = {
       "@context": "https://schema.org",
@@ -58,7 +60,7 @@ export default function AutoSplitPage() {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <AutoSplitClient />
+        <AutoSplitLoader />
       </>
   )
 }

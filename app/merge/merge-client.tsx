@@ -89,9 +89,13 @@ export default function MergeClient() {
            const file = files[i]
            const url = URL.createObjectURL(file)
            urls[i] = url
-           const pdf = await pdfjs.getDocument(url).promise
-           counts[i] = pdf.numPages
-           for (let p = 0; p < pdf.numPages; p++) {
+           let numPages = 1
+           if (file.type === "application/pdf") {
+               const pdf = await pdfjs.getDocument(url).promise
+               numPages = pdf.numPages
+           }
+           counts[i] = numPages
+           for (let p = 0; p < numPages; p++) {
                newPages.push({
                    id: `f${i}-p${p}-${Math.random()}`,
                    fileIndex: i,
@@ -156,37 +160,74 @@ export default function MergeClient() {
   }
 
   // Client-Side Merge Logic
+  // Client-Side Universal Merge Logic
   const handleMerge = async () => {
       if (files.length === 0 || pages.length === 0) return
       setIsProcessing(true)
       
       try {
-          // 1. Load all source PDFs
-          const pdfDocs = await Promise.all(
-              files.map(async (file) => {
-                  const buffer = await file.arrayBuffer()
-                  return await PDFDocument.load(buffer)
-              })
-          )
-
-          // 2. Create new document
           const mergedDoc = await PDFDocument.create()
-
-          // 3. Process pages in order
-          // We need to group pages by source file to minimize copyPages calls (optimization)
-          // But since order is arbitrary, we might copy one by one. pdf-lib handles this okay.
           
-          for (const pageItem of pages) {
-              const sourceDoc = pdfDocs[pageItem.fileIndex]
-              // copyPages returns an array of copied pages
-              const [copiedPage] = await mergedDoc.copyPages(sourceDoc, [pageItem.pageIndex])
+          // Cache for loaded source documents and embedded images
+          const pdfCache: Record<number, PDFDocument> = {}
+          const imageCache: Record<number, any> = {} 
+
+          // Pre-load assets
+          for (let i = 0; i < files.length; i++) {
+              const file = files[i]
+              const buffer = await file.arrayBuffer()
               
-              if (pageItem.rotation !== 0) {
-                  const existingRotation = copiedPage.getRotation().angle
-                  copiedPage.setRotation(degrees(existingRotation + pageItem.rotation))
+              if (file.type === "application/pdf") {
+                  pdfCache[i] = await PDFDocument.load(buffer)
               }
+              // Images will be embedded on demand or pre-embedded. 
+              // Embedding requires the 'mergedDoc' context, so we do it during the loop OR pre-embed if we trust order.
+              // We'll do it on demand and cache the embedded reference.
+          }
+
+          for (const pageItem of pages) {
+              const fileIndex = pageItem.fileIndex
+              const file = files[fileIndex]
               
-              mergedDoc.addPage(copiedPage)
+              if (file.type === "application/pdf") {
+                  const sourceDoc = pdfCache[fileIndex]
+                  const [copiedPage] = await mergedDoc.copyPages(sourceDoc, [pageItem.pageIndex])
+                  
+                  if (pageItem.rotation !== 0) {
+                      const existingRotation = copiedPage.getRotation().angle
+                      copiedPage.setRotation(degrees((existingRotation + pageItem.rotation) % 360))
+                  }
+                  mergedDoc.addPage(copiedPage)
+              } else {
+                  // It is an image
+                  let image = imageCache[fileIndex]
+                  if (!image) {
+                      const buffer = await file.arrayBuffer()
+                      if (file.type === "image/png") image = await mergedDoc.embedPng(buffer)
+                      else if (file.type === "image/jpeg" || file.type === "image/jpg") image = await mergedDoc.embedJpg(buffer)
+                      else {
+                           // Fallback or try embedding as png/jpg if unsure
+                           // For now, assume jpg if not png
+                           try { image = await mergedDoc.embedJpg(buffer) } catch(e) { image = await mergedDoc.embedPng(buffer) }
+                      }
+                      imageCache[fileIndex] = image
+                  }
+                  
+                  // Create page matching image dimensions (or fit to A4? Let's fit image size to keep quality)
+                  // Actually, standard behavior for "Image to PDF" is usually fit to A4 or keep original size.
+                  // Let's keep original size for highest quality "Universal Merge".
+                  const page = mergedDoc.addPage([image.width, image.height])
+                  page.drawImage(image, {
+                      x: 0,
+                      y: 0,
+                      width: image.width,
+                      height: image.height,
+                  })
+                  
+                   if (pageItem.rotation !== 0) {
+                      page.setRotation(degrees(pageItem.rotation))
+                  }
+              }
           }
 
           // 4. Save and Download
@@ -273,7 +314,7 @@ export default function MergeClient() {
                             <div className="p-1.5 rounded-[2.5rem] bg-gradient-to-b from-white/10 to-white/0 shadow-2xl">
                                 <div className="p-10 rounded-[2.3rem] bg-[#0A0A0F] border border-white/5 relative overflow-hidden group">
                                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                                    <FileUploader onFileSelect={handleFilesSelected} accept=".pdf" multiple />
+                                    <FileUploader onFileSelect={handleFilesSelected} accept=".pdf,.jpg,.jpeg,.png" multiple />
                                 </div>
                             </div>
                             
@@ -402,16 +443,27 @@ export default function MergeClient() {
                                                      </div>
                                                 </div>
                                                 
-                                                <Document file={fileUrls[page.fileIndex]} className="w-full h-full opacity-90 group-hover:opacity-100 transition-opacity flex items-center justify-center bg-white/5">
-                                                    <Page 
-                                                      pageNumber={page.pageIndex + 1} 
-                                                      rotate={page.rotation} 
-                                                      width={180} 
-                                                      renderTextLayer={false} 
-                                                      renderAnnotationLayer={false}
-                                                      loading={<Loader2 className="animate-spin text-white/20" />}
-                                                    />
-                                                </Document>
+                                                {files[page.fileIndex].type === "application/pdf" ? (
+                                                    <Document file={fileUrls[page.fileIndex]} className="w-full h-full opacity-90 group-hover:opacity-100 transition-opacity flex items-center justify-center bg-white/5">
+                                                        <Page 
+                                                          pageNumber={page.pageIndex + 1} 
+                                                          rotate={page.rotation} 
+                                                          width={180} 
+                                                          renderTextLayer={false} 
+                                                          renderAnnotationLayer={false}
+                                                          loading={<Loader2 className="animate-spin text-white/20" />}
+                                                        />
+                                                    </Document>
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center bg-black/50">
+                                                        <img 
+                                                            src={fileUrls[page.fileIndex]} 
+                                                            alt="Page" 
+                                                            className="max-w-full max-h-full object-contain transform transition-transform"
+                                                            style={{ transform: `rotate(${page.rotation}deg)` }} 
+                                                        />
+                                                    </div>
+                                                )}
 
                                                 {/* Overlay Actions */}
                                                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-[2px]">

@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import ExtractImagesClient from './extract-images-client'
+
 
 export const metadata: Metadata = {
   title: "Extract Images from PDF - Download Embedded Photos | Docoria",
@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   }
 }
 
+import ExtractImagesLoader from './extract-images-loader'
+
 export default function ExtractImagesPage() {
   const jsonLd = {
       "@context": "https://schema.org",
@@ -58,7 +60,7 @@ export default function ExtractImagesPage() {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <ExtractImagesClient />
+        <ExtractImagesLoader />
       </>
   )
 }
