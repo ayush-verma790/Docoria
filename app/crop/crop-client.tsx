@@ -10,7 +10,7 @@ import { Loader2, Download, Crop, CheckCircle, Smartphone, Monitor } from "lucid
 import { SiteHeader } from "@/components/site-header"
 import { cn } from "@/lib/utils"
 // import 'react-pdf/dist/esm/Page/AnnotationLayer.css'; // Optional
-import 'react-pdf/dist/esm/Page/TextLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 
 // Initialize PDF.js worker
 if (typeof window !== 'undefined' && !pdfjs.GlobalWorkerOptions.workerSrc) {

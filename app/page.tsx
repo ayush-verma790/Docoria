@@ -9,7 +9,7 @@ import {
   Table, Presentation, MessageSquare, 
   Zap, Lock, Smartphone, Globe, ChevronRight,
   CheckCircle2, Star, EyeOff, Wrench,
-  User, Crop, CreditCard, Type, Aperture, Eraser, Palette, Camera
+  User, Crop, CreditCard, Type, Aperture, Eraser, Palette, Camera, GitCompare
 } from "lucide-react"
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion"
 import { SiteHeader } from "@/components/site-header"
@@ -383,7 +383,11 @@ export default function LandingPage() {
                         >
                             {[
                                 { name: "Merge PDF", href: "/merge", icon: Layers, desc: "Combine multiple files" },
+                                { name: "Compare PDF", href: "/compare", icon: GitCompare, desc: "Visualize differences" },
                                 { name: "Split PDF", href: "/split", icon: Scissors, desc: "Extract specific pages" },
+                                { name: "Auto Split", href: "/auto-split", icon: Zap, desc: "Split by text or size" },
+                                { name: "Extract Images", href: "/extract-images", icon: ImageIcon, desc: "Get photos from PDF" },
+                                { name: "PDF to Text", href: "/pdf-to-text", icon: FileText, desc: "Convert PDF to TXT" },
                                 { name: "Compress PDF", href: "/compress", icon: Zap, desc: "Reduce file size" },
                                 { name: "Organize", href: "/organize", icon: Layers, desc: "Sort & delete pages" },
                                 { name: "Rotate PDF", href: "/rotate", icon: RefreshCw, desc: "Fix page orientation" },
@@ -391,6 +395,7 @@ export default function LandingPage() {
                                 { name: "Resize PDF", href: "/resize", icon: Scan, desc: "Change page dimensions" },
                                 { name: "Repair PDF", href: "/repair", icon:  Wrench, desc: "Fix corrupted files" },
                                 { name: "Flatten PDF", href: "/flatten", icon: Layers, desc: "Lock form fields" },
+                                { name: "Watermark PDF", href: "/watermark", icon: CheckCircle2, desc: "Add stamp or text" },
                                 { name: "Crop PDF", href: "/crop", icon: Crop, desc: "Trim page margins" },
                             ].map((tool) => (
                                 <motion.div key={tool.name} variants={itemVariants}>
@@ -547,6 +552,56 @@ export default function LandingPage() {
            </div>
         </section>
 
+        {/* FAQ SECTION - SEO Goldmine */}
+        <section className="px-6 py-32 max-w-5xl mx-auto">
+            <div className="text-center mb-16">
+                 <h2 className="text-4xl font-black text-foreground mb-4">Frequently Asked Questions</h2>
+                 <p className="text-muted-foreground text-lg">Common questions about our free PDF tools.</p>
+            </div>
+            
+            <div className="grid gap-6">
+                {[
+                    { q: "Is Docorio completely free?", a: "Yes, Docorio is 100% free to use. You can merge, split, compress, and edit PDFs without paying a dime." },
+                    { q: "Are my files secure?", a: "Absolutely. We use detailed client-side processing, meaning your files often never leave your browser. If they do, they are encrypted and deleted instantly." },
+                    { q: "Do I need to install any software?", a: "No. All tools run directly in your web browser. You can use Docorio on Windows, Mac, Linux, iPhone, and Android." },
+                    { q: "How can I merge multiple PDFs?", a: "Simply upload your files to our Merge PDF tool, drag to reorder them, and click 'Merge'. It takes seconds." },
+                    { q: "Can I edit text in a PDF?", a: "Yes! Use our Edit PDF tool to add text, images, signatures, and shapes to any document." }
+                ].map((faq, i) => (
+                    <article key={i} className="bg-card p-6 rounded-2xl border border-border hover:border-primary/30 transition-colors">
+                        <h3 className="font-bold text-lg text-foreground mb-2 flex items-center gap-2">
+                             <span className="text-primary">Q.</span> {faq.q}
+                        </h3>
+                         <p className="text-muted-foreground leading-relaxed pl-6">{faq.a}</p>
+                    </article>
+                ))}
+            </div>
+            
+            {/* FAQ JSON-LD Schema */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": [
+                            { q: "Is Docorio completely free?", a: "Yes, Docorio is 100% free to use. You can merge, split, compress, and edit PDFs without paying a dime." },
+                            { q: "Are my files secure?", a: "Absolutely. We use detailed client-side processing, meaning your files often never leave your browser. If they do, they are encrypted and deleted instantly." },
+                            { q: "Do I need to install any software?", a: "No. All tools run directly in your web browser. You can use Docorio on Windows, Mac, Linux, iPhone, and Android." },
+                            { q: "How can I merge multiple PDFs?", a: "Simply upload your files to our Merge PDF tool, drag to reorder them, and click 'Merge'. It takes seconds." },
+                            { q: "Can I edit text in a PDF?", a: "Yes! Use our Edit PDF tool to add text, images, signatures, and shapes to any document." }
+                        ].map(item => ({
+                            "@type": "Question",
+                            "name": item.q,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": item.a
+                            }
+                        }))
+                    })
+                }}
+            />
+        </section>
+
       </main>
 
       {/* MASSIVE FOOTER */}
@@ -626,7 +681,7 @@ export default function LandingPage() {
                   <div className="flex flex-col gap-6">
                       <h4 className="font-bold text-white text-lg">Resources</h4>
                       <Link href="/blog" className="text-gray-500 hover:text-indigo-400 transition-colors">Blog</Link>
-                      <Link href="/help" className="text-gray-500 hover:text-indigo-400 transition-colors">Help Center</Link>
+                      <Link href="/faq" className="text-gray-500 hover:text-indigo-400 transition-colors">FAQ</Link>
                       <Link href="/api" className="text-gray-500 hover:text-indigo-400 transition-colors">API</Link>
                       <Link href="/pricing" className="text-gray-500 hover:text-indigo-400 transition-colors">Pricing</Link>
                   </div>

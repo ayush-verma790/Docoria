@@ -5,7 +5,7 @@ import { FileUploader } from "@/components/file-uploader"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { SiteHeader } from "@/components/site-header"
-import { Scan, Type, Copy, Check, Download, Loader2, Sparkles, RefreshCw, Sliders, Play, Pause, Languages, Image as ImageIcon } from "lucide-react"
+import { Scan, Type, Copy, Check, Download, Loader2, Sparkles, RefreshCw, Sliders, Play, Pause, Languages, Image as ImageIcon, Camera, X } from "lucide-react"
 import { createWorker } from "tesseract.js"
 
 // Language Options
@@ -36,7 +36,51 @@ export default function ScannerClient() {
   // Speech State
   const [isSpeaking, setIsSpeaking] = useState(false)
   
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
+  
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  const startCamera = async () => {
+    try {
+        setIsCameraOpen(true)
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+        if (videoRef.current) {
+            videoRef.current.srcObject = stream
+        }
+    } catch (err) {
+        alert("Camera access denied")
+        setIsCameraOpen(false)
+    }
+  }
+
+  const stopCamera = () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream
+            stream.getTracks().forEach(track => track.stop())
+      }
+      setIsCameraOpen(false)
+  }
+
+  const captureImage = () => {
+      if (!videoRef.current) return
+      
+      const video = videoRef.current
+      const canvas = document.createElement("canvas")
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      const ctx = canvas.getContext("2d")
+      if (ctx) {
+          ctx.drawImage(video, 0, 0)
+          canvas.toBlob(blob => {
+              if (blob) {
+                  const file = new File([blob], "camera-capture.jpg", { type: "image/jpeg" })
+                  setFile(file)
+                  stopCamera()
+              }
+          }, 'image/jpeg')
+      }
+  }
 
   // 1. Handle File Selection & Initial Preview
   useEffect(() => {
@@ -155,11 +199,28 @@ export default function ScannerClient() {
                  <div className="lg:col-span-5 space-y-6">
                     <Card className="p-1 bg-muted/50 border-white/10 overflow-hidden rounded-3xl backdrop-blur-md">
                          <div className="p-6 md:p-8 bg-card border-white/5 rounded-[1.4rem] space-y-6">
-                             {!file ? (
-                                <div className="py-16 border-2 border-dashed border-muted-foreground/20 rounded-2xl bg-muted/30 hover:bg-muted/50 transition-colors group cursor-pointer">
-                                    <FileUploader onFileSelect={(files) => setFile(files[0])} accept="image/*" />
-                                    <p className="text-center mt-6 text-muted-foreground font-medium group-hover:text-pink-500 transition-colors">Drop image here to start</p>
+                             {!file && !isCameraOpen ? (
+                                <div className="space-y-4">
+                                     <div className="py-12 border-2 border-dashed border-muted-foreground/20 rounded-2xl bg-muted/30 hover:bg-muted/50 transition-colors group cursor-pointer relative">
+                                        <FileUploader onFileSelect={(files) => setFile(files[0])} accept="image/*" />
+                                        <p className="text-center mt-4 text-muted-foreground font-medium group-hover:text-pink-500 transition-colors">Drop image or click to upload</p>
+                                    </div>
+                                    <div className="relative">
+                                        <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-white/10"></span></div>
+                                        <div className="relative flex justify-center text-xs uppercase"><span className="bg-background px-2 text-muted-foreground">Or</span></div>
+                                    </div>
+                                    <Button onClick={startCamera} className="w-full h-12 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-bold">
+                                        <Camera className="mr-2" /> Use Camera
+                                    </Button>
                                 </div>
+                             ) : isCameraOpen ? (
+                                 <div className="relative aspect-video bg-black rounded-2xl overflow-hidden border border-pink-500/50 shadow-[0_0_30px_rgba(236,72,153,0.3)]">
+                                     <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
+                                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4">
+                                         <Button onClick={stopCamera} variant="secondary" className="rounded-full w-12 h-12 p-0"><X size={20} /></Button>
+                                         <Button onClick={captureImage} className="rounded-full w-16 h-16 bg-white border-4 border-zinc-200 p-0 hover:bg-zinc-100 ring-4 ring-pink-500/50"></Button>
+                                     </div>
+                                 </div>
                              ) : (
                                 <>
                                     {/* Preview Area */}

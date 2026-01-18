@@ -15,6 +15,9 @@ import { motion, AnimatePresence } from "framer-motion"
 import { PDFDocument, rgb, degrees, StandardFonts } from "pdf-lib"
 import { cn } from "@/lib/utils"
 
+import { NextActionGrid } from "@/components/next-action-grid"
+import { getGlobalFile } from "@/lib/file-store"
+
 // PDF.js worker setup
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
 
@@ -40,6 +43,14 @@ export default function WatermarkClient() {
   // Processing State
   const [isProcessing, setIsProcessing] = useState(false)
   const [result, setResult] = useState<{ downloadUrl: string, filename: string } | null>(null)
+  const [watermarkedFile, setWatermarkedFile] = useState<File | null>(null)
+  
+  useEffect(() => {
+      const global = getGlobalFile()
+      if (global.file) {
+          setFile(global.file)
+      }
+  }, [])
   
   // Preview State
   const [numPages, setNumPages] = useState<number>(0)
@@ -177,10 +188,14 @@ export default function WatermarkClient() {
         const pdfBytes = await pdfDoc.save()
         const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
         const url = URL.createObjectURL(blob)
+        const filename = `watermarked-${Date.now()}.pdf`
         setResult({
             downloadUrl: url,
-            filename: `watermarked-${Date.now()}.pdf`
+            filename
         })
+        
+        const newFile = new File([blob], filename, { type: 'application/pdf' })
+        setWatermarkedFile(newFile)
 
     } catch (e) {
         console.error(e)
@@ -518,6 +533,8 @@ export default function WatermarkClient() {
                                 <RefreshCcw className="mr-2 w-4 h-4" /> Watermark Another File
                             </Button>
                         </div>
+                        
+                        <NextActionGrid file={watermarkedFile} />
                     </div>
                 </div>
             </motion.div>

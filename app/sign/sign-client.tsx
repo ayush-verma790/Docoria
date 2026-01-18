@@ -21,8 +21,19 @@ import SignatureCanvas from "react-signature-canvas"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 
+import { NextActionGrid } from "@/components/next-action-grid"
+import { getGlobalFile } from "@/lib/file-store"
+
 export default function SignClient() {
   const [file, setFile] = useState<File | null>(null)
+  
+  useEffect(() => {
+    const global = getGlobalFile()
+    if (global.file) {
+        setFile(global.file)
+        setFileUrl(URL.createObjectURL(global.file))
+    }
+  }, [])
   const [fileUrl, setFileUrl] = useState<string | null>(null)
   const [numPages, setNumPages] = useState<number>(0)
   const [activePage, setActivePage] = useState(1)
@@ -43,6 +54,7 @@ export default function SignClient() {
   
   const [isProcessing, setIsProcessing] = useState(false)
   const [resultUrl, setResultUrl] = useState<string | null>(null)
+  const [signedFile, setSignedFile] = useState<File | null>(null)
   
   const sigCanvas = useRef<SignatureCanvas | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -163,7 +175,10 @@ export default function SignClient() {
       
       const pdfBytes = await pdfDoc.save()
       const blob = new Blob([pdfBytes as any], { type: "application/pdf" })
-      setResultUrl(URL.createObjectURL(blob))
+      const url = URL.createObjectURL(blob)
+      const filename = `signed-${file.name}`
+      setResultUrl(url)
+      setSignedFile(new File([blob], filename, { type: "application/pdf" }))
     } catch (err) {
       console.error(err)
       alert("Failed to sign PDF")
@@ -386,6 +401,8 @@ export default function SignClient() {
                             </Button>
                         </div>
                   </div>
+                  
+                  <NextActionGrid file={signedFile} />
              </div>
         )}
       </div>

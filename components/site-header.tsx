@@ -37,6 +37,7 @@ export function SiteHeader() {
                         { name: "Compress", href: "/compress" },
                         { name: "Edit", href: "/edit" },
                         { name: "Chat AI", href: "/chat-pdf" },
+                        { name: "Blog", href: "/blog" },
                         { name: "Merge", href: "/merge" },
                     ].map((item) => (
                         <Link key={item.name} href={item.href} className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full transition-all duration-200">

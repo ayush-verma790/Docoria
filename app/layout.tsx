@@ -30,11 +30,16 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Docorio - AI Powered PDF & Image Tools",
+    default: "Docorio - Free PDF Editor, Converter, Merger & AI Tools",
     template: "%s | Docorio",
   },
-  description: "The world's most advanced open-source document platform. Convert, edit, eSign, and protect PDFs and Images instantly. Local, secure, and free.",
-  keywords: ["pdf converter", "image editor", "passport photo maker", "background remover", "pdf merge", "pdf split", "ocr", "ai pdf"],
+  description: "The best free online PDF editor. Merge, split, compress, convert, sign, and edit PDFs instantly. 100% free, secure, and works offline in your browser.",
+  keywords: [
+    "pdf editor", "free pdf converter", "merge pdf online", "compress pdf", 
+    "pdf to word", "remove background", "passport photo maker", "esign pdf", 
+    "edit pdf text", "combine pdfs", "jpg to pdf", "extract text from pdf",
+    "pdf ai assistant", "chat with pdf", "local pdf tools"
+  ],
   authors: [{ name: "Docorio Team" }],
   creator: "Docorio",
   metadataBase: new URL("https://docorio.com"), // Placeholder, should be env var in real prod
@@ -42,22 +47,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://docorio.com",
-    title: "Docorio - Master Your Digital Docs",
-    description: "Transform, merge, and edit PDFs with unmatched speed. Secure, local, and beautiful.",
+    title: "Docorio - Free PDF Editor & Converter Suite",
+    description: "Edit, Convert, and Sign PDFs for free. No signup required. Fast, secure, and local.",
     siteName: "Docorio",
     images: [
       {
         url: "/og-image.jpg", // Placeholder
         width: 1200,
         height: 630,
-        alt: "Docorio Preview",
+        alt: "Docorio PDF Tools",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Docorio - AI PDF Tools",
-    description: "The ultimate document suite for safety and speed.",
+    title: "Free PDF Tools - Edit, Convert & Sign",
+    description: "The ultimate free PDF and Image toolkit. No limits, no signup.",
     images: ["/og-image.jpg"],
     creator: "@docorio",
   },
@@ -90,8 +95,37 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         "logo": "https://docorio.com/icon-dark-32x32.png",
         "sameAs": [
           "https://twitter.com/docorio",
-          "https://github.com/docorio"
         ]
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Merge PDF",
+        "url": "https://docorio.com/merge",
+        "description": "Combine multiple PDFs into one file."
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Edit PDF",
+        "url": "https://docorio.com/edit",
+        "description": "Add text, images, and shapes to PDF."
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Sign PDF",
+        "url": "https://docorio.com/sign",
+        "description": "Add digital signatures to documents."
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Chat with PDF",
+        "url": "https://docorio.com/chat-pdf",
+        "description": "Ask questions to your PDF using AI."
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Compress PDF",
+        "url": "https://docorio.com/compress",
+        "description": "Reduce PDF file size."
       }
     ]
   }

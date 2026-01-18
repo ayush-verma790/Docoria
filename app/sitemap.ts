@@ -35,6 +35,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         '/image-tools/crop',
         '/image-tools/id-card',
         '/image-tools/blur',
+        '/chat-pdf',
+        '/auto-split',
+        '/rotate',
+        '/pdf-to-text',
+        '/extract-images',
+        '/extract-images',
+        '/compare',
+        '/blog',
+        '/faq',
     ]
 
     return routes.map((route) => ({

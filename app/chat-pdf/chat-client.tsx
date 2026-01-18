@@ -60,6 +60,8 @@ function MessageBubble({ msg }: { msg: Message }) {
     )
 }
 
+import { getGlobalFile } from "@/lib/file-store"
+
 export default function ChatClient() {
   const [apiKey, setApiKey] = useState("AIzaSyC4lLnPBVvZJ7AlyM2om_zivy7HyNzDXnM")
   const [hasKey, setHasKey] = useState(true)
@@ -74,6 +76,13 @@ export default function ChatClient() {
   useEffect(() => {
     // Initialize PDF.js worker
     pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+
+    // Check for global file
+    const global = getGlobalFile()
+    if (global.file) {
+        setFile(global.file)
+        extractText(global.file)
+    }
   }, [])
 
   useEffect(() => {

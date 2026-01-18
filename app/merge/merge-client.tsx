@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils"
 import { SiteHeader } from "@/components/site-header"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
+import { NextActionGrid } from "@/components/next-action-grid"
+
 interface PageItem {
   id: string
   fileIndex: number
@@ -36,6 +38,7 @@ export default function MergeClient() {
   const [pages, setPages] = useState<PageItem[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [result, setResult] = useState<{ downloadUrl: string, filename: string } | null>(null)
+  const [mergedFile, setMergedFile] = useState<File | null>(null) // To pass to next tools
   const [error, setError] = useState("")
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
@@ -190,11 +193,16 @@ export default function MergeClient() {
           const pdfBytes = await mergedDoc.save()
           const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
           const url = URL.createObjectURL(blob)
+          const filename = `merged-document-${Date.now()}.pdf`
           
           setResult({
               downloadUrl: url,
-              filename: `merged-document-${Date.now()}.pdf`
+              filename
           })
+          
+          // Create File object for next steps
+          const newFile = new File([blob], filename, { type: 'application/pdf' })
+          setMergedFile(newFile)
 
       } catch (err) {
           console.error(err)
@@ -417,6 +425,24 @@ export default function MergeClient() {
                                         </div>
                                     ))}
                                 </div>
+                                
+                                {/* Bottom Action Bar for Easy Access */}
+                                <div className="flex flex-col items-center justify-center pb-20 space-y-6">
+                                    {error && (
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-200 bg-red-500/10 p-4 rounded-xl border border-red-500/20 text-center flex items-center justify-center gap-2">
+                                           <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>{error}
+                                        </motion.div>
+                                    )}
+                                    <Button 
+                                        className="h-20 px-12 rounded-2xl bg-white text-black text-xl font-black hover:bg-indigo-50 shadow-[0_0_60px_rgba(255,255,255,0.2)] transition-all hover:scale-[1.02] border border-white/20"
+                                        onClick={handleMerge}
+                                        disabled={isProcessing}
+                                    >
+                                        {isProcessing ? <Loader2 className="animate-spin mr-3 w-8 h-8" /> : <Download className="mr-3 w-8 h-8" />}
+                                        Merge & Download PDF
+                                    </Button>
+                                    <p className="text-muted-foreground text-sm">Ready to combine {pages.length} pages into one document.</p>
+                                </div>
                             </div>
                            ) : (
                                <div className="max-w-xl mx-auto p-12 text-center relative">
@@ -438,6 +464,8 @@ export default function MergeClient() {
                                                 Start Over
                                             </Button>
                                         </div>
+
+                                        <NextActionGrid file={mergedFile} />
                                     </div>
                                </div>
                            )}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { PDFDocument } from "pdf-lib"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -8,10 +8,21 @@ import { FileUploader } from "@/components/file-uploader"
 import { Loader2, Download, Hammer, Check, Layers, AlertTriangle, ShieldCheck } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
 
+import { NextActionGrid } from "@/components/next-action-grid"
+import { getGlobalFile } from "@/lib/file-store"
+
 export default function FlattenClient() {
   const [file, setFile] = useState<File | null>(null)
+  
+  useEffect(() => {
+    const global = getGlobalFile()
+    if (global.file) {
+        setFile(global.file)
+    }
+  }, [])
   const [isProcessing, setIsProcessing] = useState(false)
   const [result, setResult] = useState<{ downloadUrl: string, filename: string } | null>(null)
+  const [flattenedFile, setFlattenedFile] = useState<File | null>(null)
   
   const handleApply = async () => {
     if (!file) return
@@ -34,11 +45,14 @@ export default function FlattenClient() {
         const pdfBytes = await pdfDoc.save()
         const blob = new Blob([pdfBytes as any], { type: 'application/pdf' })
         const url = URL.createObjectURL(blob)
+        const filename = `flattened-${file.name}`
         
         setResult({
             downloadUrl: url,
-            filename: `flattened-${file.name}`
+            filename
         })
+        
+        setFlattenedFile(new File([blob], filename, { type: 'application/pdf' }))
     } catch (err) {
         console.error(err)
         alert("Failed to process PDF. Please try again.")
@@ -158,6 +172,8 @@ export default function FlattenClient() {
                                           Flatten Another
                                       </Button>
                                   </div>
+                                  
+                                  <NextActionGrid file={flattenedFile} />
                              </div>
                          )}
                      </Card>

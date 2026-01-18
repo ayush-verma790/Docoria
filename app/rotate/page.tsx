@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import OrganizeClient from '../organize/organize-client'
+import RotateClient from './rotate-client'
 
 export const metadata: Metadata = {
   title: "Rotate PDF - Permanently Rotate PDF Pages Online | Docoria",
@@ -58,7 +58,7 @@ export default function RotatePage() {
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <OrganizeClient title="Rotate PDF Pages" />
+        <RotateClient />
       </>
   )
 }
